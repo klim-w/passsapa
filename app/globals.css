@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-formal-body: 'Sarabun', 'TH Sarabun New', sans-serif;
+  --font-heading: 'Prompt', 'Kanit', sans-serif;
+  --radius-card: 1.25rem; /* ขอบมนระดับพรีเมียม 20px */
+  --radius-pill: 9999px;
+}
+
+/* Base resets & Fallback Safety Rules */
+img {
+  max-width: 100% !important;
+  height: auto;
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* 🌙 Night Mode CI Standard (เขียวหยก-ทองมิติ มนละมุน ถนอมสายตา) */
+[data-theme="dark"] {
+  --bg-primary: #060a09;
+  --bg-surface: #0c1412;
+  --bg-surface-subtle: #121d1a;
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --primary-green: #10b981;
+  --accent-gold: #f59e0b;
+}
+
+[data-theme="dark"] body {
+  background-color: #060a09 !important;
+  color: #f3f4f6 !important;
+}
+
+/* Borderless Rounded-2XL Cards for Night Mode */
+[data-theme="dark"] .glass-panel {
+  background-color: #0c1412 !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-radius: 1.25rem !important; /* ขอบมนละมุน 20px */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .glass-panel-emerald {
+  background: linear-gradient(145deg, #0f1c18, #09120f) !important;
+  border: 1px solid rgba(16, 185, 129, 0.12) !important;
+  border-radius: 1.5rem !important; /* ขอบมนพิเศษ 24px */
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ☀️ Light Mode CI Standard (ขาวมรกตอุ่น มนละมุน คอนทราสต์คมชัด) */
+[data-theme="light"] {
+  --bg-primary: #f3f7f5;
+  --bg-surface: #ffffff;
+  --bg-surface-subtle: #e6f0ed;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --primary-green: #0d9488;
+  --accent-gold: #d97706;
+}
+
+[data-theme="light"] body {
+  background-color: #f3f7f5 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] nav {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .glass-panel {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 1.25rem !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .glass-panel-emerald {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(13, 148, 136, 0.2) !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 0 4px 20px rgba(13, 148, 136, 0.06) !important;
+}
+
+body {
+  font-family: var(--font-formal-body);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6, button, .font-heading {
+  font-family: var(--font-heading);
+}
+
+.btn-emerald {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #ffffff !important;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  padding: 0.55rem 1.3rem !important;
+  border-radius: 9999px !important; /* ปุ่มขอบมนรูปทรงแคปซูล Rounded-Full */
+  border: none !important;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+}
+
+.btn-emerald:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+}

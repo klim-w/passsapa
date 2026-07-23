@@ -102,7 +102,7 @@ export default function Home() {
         )}
 
         {currentView === "dashboard" && (
-          <StudentDashboard onNavigate={setCurrentView} />
+          <StudentDashboard onNavigate={setCurrentView} userName={userName} />
         )}
 
         {currentView === "exam" && (

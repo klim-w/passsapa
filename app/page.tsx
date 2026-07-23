@@ -11,6 +11,7 @@ import { PaymentModal } from "../src/components/PaymentModal";
 import { AuthModal } from "../src/components/AuthModal";
 import { UserProfileModal } from "../src/components/UserProfileModal";
 import { NotificationToast } from "../src/components/NotificationToast";
+import { MobileBottomNav } from "../src/components/MobileBottomNav";
 import { Footer } from "../src/components/Footer";
 
 export default function Home() {
@@ -37,8 +38,17 @@ export default function Home() {
     icon: "✨"
   });
 
+  // 🌙 Theme Memory (ดึงค่าธีมที่บันทึกไว้ใน localStorage)
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("passsapa_theme") as "dark" | "light" | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("passsapa_theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -90,7 +100,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-black">
+    <div className="min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-black pb-16 md:pb-0">
       
       {/* Top Glassmorphic Navbar */}
       <Navbar
@@ -172,6 +182,13 @@ export default function Home() {
         message={toastState.message}
         icon={toastState.icon}
         onClose={() => setToastState(prev => ({ ...prev, open: false }))}
+      />
+
+      {/* 📱 Mobile Floating Bottom Navigation Bar */}
+      <MobileBottomNav
+        currentView={currentView}
+        onNavigate={setCurrentView}
+        isLoggedIn={isLoggedIn}
       />
 
       {/* Footer */}

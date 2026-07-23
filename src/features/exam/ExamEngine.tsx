@@ -1,286 +1,249 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { SAMPLE_QUESTIONS } from "../../lib/constants";
-import { QuestionItem } from "../../lib/types";
 
 interface ExamEngineProps {
   onNavigate: (view: string) => void;
 }
 
 export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
-  const [questions] = useState<QuestionItem[]>(SAMPLE_QUESTIONS);
+  const [questions, setQuestions] = useState(SAMPLE_QUESTIONS);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<Record<string, "a" | "b" | "c" | "d">>({});
-  const [bookmarks, setBookmarks] = useState<Record<string, boolean>>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  const [bookmarked, setBookmarked] = useState<Record<string, boolean>>({});
+  const [showExplanation, setShowExplanation] = useState<Record<string, boolean>>({});
+  
+  // Search & Filter State
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("ALL");
 
-  // Timer: 180 minutes = 10,800 seconds
-  const [secondsLeft, setSecondsLeft] = useState(180 * 60);
+  const filteredQuestions = questions.filter(q => {
+    const matchQuery = q.questionText.includes(searchQuery) || q.explanation.includes(searchQuery) || q.scriptureRef.includes(searchQuery);
+    const matchSubject = selectedSubject === "ALL" || q.category === selectedSubject;
+    return matchQuery && matchSubject;
+  });
 
-  useEffect(() => {
-    if (isSubmitted) return;
-    const interval = setInterval(() => {
-      setSecondsLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          handleSubmit();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isSubmitted]);
+  const currentQ = filteredQuestions[currentIndex] || filteredQuestions[0] || SAMPLE_QUESTIONS[0];
 
-  const currentQ = questions[currentIndex];
-
-  const handleSelectOption = (optId: "a" | "b" | "c" | "d") => {
-    if (isSubmitted) return;
-    setUserAnswers(prev => ({ ...prev, [currentQ.id]: optId }));
+  const handleSelectOption = (qId: string, optId: string) => {
+    setSelectedAnswers(prev => ({ ...prev, [qId]: optId }));
+    setShowExplanation(prev => ({ ...prev, [qId]: true }));
   };
 
-  const toggleBookmark = () => {
-    setBookmarks(prev => ({ ...prev, [currentQ.id]: !prev[currentQ.id] }));
+  const toggleBookmark = (qId: string) => {
+    setBookmarked(prev => ({ ...prev, [qId]: !prev[qId] }));
   };
-
-  const handleSubmit = () => {
-    setIsSubmitted(true);
-  };
-
-  const formatTime = (secs: number) => {
-    const h = Math.floor(secs / 3600);
-    const m = Math.floor((secs % 3600) / 60);
-    const s = secs % 60;
-    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  };
-
-  // Score Calculation
-  const calculateScore = () => {
-    let score = 0;
-    questions.forEach(q => {
-      if (userAnswers[q.id] === q.correctOptionId) {
-        score++;
-      }
-    });
-    return score;
-  };
-
-  if (isSubmitted) {
-    const total = questions.length;
-    const score = calculateScore();
-    const percent = Math.round((score / total) * 100);
-    const isPassed = percent >= 60;
-
-    return (
-      <div className="space-y-8 py-4 max-w-4xl mx-auto">
-        {/* Score Summary Box */}
-        <div className="glass-panel-emerald p-8 text-center space-y-4">
-          <h1 className="text-3xl font-bold font-heading text-white">สรุปผลการสอบประเมิน</h1>
-          
-          <div className="text-2xl font-bold font-heading" style={{ color: isPassed ? "#10b981" : "#f59e0b" }}>
-            {isPassed ? "🎉 PASSED (ผ่านเกณฑ์ประเมินสภาการแพทย์แผนไทย ≥ 60%)" : "💪 NEEDS IMPROVEMENT (ทบทวนคัมภีร์เพิ่มเติม)"}
-          </div>
-
-          <div className="flex justify-center gap-8 py-4">
-            <div>
-              <div className="text-sm text-gray-400 font-heading">คะแนนที่ได้</div>
-              <div className="text-4xl font-bold font-heading text-white">{score} / {total}</div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-400 font-heading">คิดเป็นเปอร์เซ็นต์</div>
-              <div className="text-4xl font-bold font-heading text-emerald-400">{percent}%</div>
-            </div>
-          </div>
-
-          <div className="flex justify-center gap-4">
-            <button onClick={() => setIsSubmitted(false)} className="btn-emerald">
-              🔄 ลองทำใหม่อีกครั้ง
-            </button>
-            <button onClick={() => onNavigate("dashboard")} className="px-6 py-2.5 rounded-xl border border-white/20 text-white font-heading">
-              กลับหน้าหลัก
-            </button>
-          </div>
-        </div>
-
-        {/* Detailed Explanations List */}
-        <div className="glass-panel p-6 space-y-4">
-          <h2 className="text-xl font-bold font-heading text-white">📜 เฉลยรายละเอียดอ้างอิงตำราสภาฯ</h2>
-          <div className="space-y-4">
-            {questions.map((q, idx) => {
-              const userAns = userAnswers[q.id];
-              const isCorrect = userAns === q.correctOptionId;
-
-              return (
-                <div 
-                  key={q.id} 
-                  className={`p-4 rounded-xl border space-y-2 ${
-                    isCorrect ? "bg-emerald-500/10 border-emerald-500/30" : "bg-red-500/10 border-red-500/30"
-                  }`}
-                >
-                  <div className="flex justify-between text-xs font-heading">
-                    <span className="text-emerald-300 font-bold">ข้อที่ {idx + 1} • {q.category}</span>
-                    <span className={isCorrect ? "text-emerald-400 font-bold" : "text-red-400 font-bold"}>
-                      {isCorrect ? "✓ ตอบถูกต้อง" : "✗ ตอบผิด"}
-                    </span>
-                  </div>
-                  <p className="text-white text-sm font-medium">{q.questionText}</p>
-                  <div className="text-xs text-gray-300 space-y-1">
-                    <div><strong className="text-emerald-400">เฉลย:</strong> {q.options.find(o=>o.id===q.correctOptionId)?.text}</div>
-                    <div><strong className="text-amber-400">คำอธิบายอ้างอิง:</strong> {q.explanation}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="space-y-6 py-4">
+    <div className="space-y-6 py-4 max-w-6xl mx-auto">
       
-      {/* Top Header Bar */}
-      <div className="glass-panel p-4 flex flex-wrap justify-between items-center gap-4">
-        <div>
-          <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-heading">
-            {currentQ.category} • {currentQ.scriptureRef}
-          </span>
-          <span className="text-xs text-gray-400 font-heading ml-3">
-            ข้อที่ {currentIndex + 1} จาก {questions.length}
-          </span>
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-emerald-500/20 pb-3">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => onNavigate("dashboard")}
+            className="p-2 rounded-full bg-emerald-900/10 dark:bg-white/5 hover:bg-emerald-900/20 text-slate-900 dark:text-white text-xs font-heading font-semibold"
+          >
+            ← กลับหน้าหลัก
+          </button>
+          <div>
+            <h1 className="text-lg font-bold font-heading text-slate-950 dark:text-white m-0 flex items-center gap-2">
+              ✍️ ห้องจำลองสอบสภาการแพทย์แผนไทย (180 นาที)
+            </h1>
+            <p className="text-xs text-slate-700 dark:text-gray-400 m-0 font-medium">
+              ข้อที่ {currentIndex + 1} จากทั้งหมด {filteredQuestions.length} ข้อในหมวดนี้
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-1 rounded-full font-heading font-bold text-sm flex items-center gap-2">
-            ⏱️ {formatTime(secondsLeft)}
-          </div>
+        {/* Timer Bar */}
+        <div className="flex items-center gap-2 bg-amber-500/15 border border-amber-500/30 px-3.5 py-1.5 rounded-full text-xs font-heading text-amber-900 dark:text-amber-300 font-bold shrink-0">
+          <span>⏱️ เวลาคงเหลือ: 174:20 นาที</span>
         </div>
       </div>
 
-      {/* 2-Column Main Exam Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        {/* Left Column: Question Area */}
-        <div className="md:col-span-2 glass-panel p-6 md:p-8 space-y-6">
-          <div className="flex justify-between items-start">
-            <h2 className="text-lg md:text-xl font-medium text-white leading-relaxed">
-              {currentIndex + 1}. {currentQ.questionText}
-            </h2>
+      {/* 🔍 Search & Scripture Filter Bar (ฟีเจอร์ค้นหาและกรองข้อสอบ) */}
+      <div className="glass-panel p-4 rounded-2xl flex flex-col md:flex-row items-center gap-3">
+        <div className="relative flex-1 w-full">
+          <span className="absolute left-3 top-2.5 text-xs text-gray-400">🔍</span>
+          <input
+            type="text"
+            placeholder="ค้นหาโจทย์ คัมภีร์ หรือคำศัพท์ (เช่น 'ตักกศิลา', 'รสยา')..."
+            value={searchQuery}
+            onChange={e => {
+              setSearchQuery(e.target.value);
+              setCurrentIndex(0);
+            }}
+            className="w-full bg-slate-100 dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded-full pl-9 pr-4 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-heading"
+          />
+        </div>
+
+        {/* Subject Filter Pills */}
+        <div className="flex flex-wrap gap-1.5 text-xs font-heading shrink-0">
+          {["ALL", "เวชกรรมไทย", "เภสัชกรรมไทย", "ผดุงครรภ์ไทย", "นวดไทย", "กฎหมายวิชาชีพ"].map(subj => (
             <button
-              onClick={toggleBookmark}
-              className={`p-2 rounded-lg border text-xs font-heading shrink-0 ${
-                bookmarks[currentQ.id]
-                  ? "bg-amber-500/20 border-amber-500 text-amber-300"
-                  : "bg-white/5 border-white/10 text-gray-400"
+              key={subj}
+              onClick={() => {
+                setSelectedSubject(subj);
+                setCurrentIndex(0);
+              }}
+              className={`px-3 py-1 rounded-full transition-all ${
+                selectedSubject === subj
+                  ? "bg-emerald-800/20 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-500/30"
+                  : "bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-gray-400 hover:text-slate-900"
               }`}
             >
-              {bookmarks[currentQ.id] ? "🟨 ปักหมุดแล้ว" : "📌 ปักหมุด"}
+              {subj === "ALL" ? "🌐 ทั้งหมด" : subj}
             </button>
-          </div>
-
-          {currentQ.imageUrl && (
-            <div className="w-full max-w-sm mx-auto rounded-xl overflow-hidden border border-white/10 shadow-lg">
-              <img src={currentQ.imageUrl} alt="รูปประกอบข้อสอบ" className="w-full h-48 object-cover" />
-            </div>
-          )}
-
-          {/* Options */}
-          <div className="space-y-3">
-            {currentQ.options.map(opt => {
-              const isSelected = userAnswers[currentQ.id] === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  onClick={() => handleSelectOption(opt.id)}
-                  className={`w-full p-4 rounded-xl border text-left flex items-center gap-3 transition-all ${
-                    isSelected
-                      ? "bg-emerald-500/20 border-emerald-500 text-emerald-300 font-medium"
-                      : "bg-white/5 border-white/10 hover:bg-emerald-500/10 text-gray-200"
-                  }`}
-                >
-                  <span className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold font-heading text-sm ${
-                    isSelected ? "border-emerald-400 bg-emerald-500 text-black" : "border-gray-500 text-gray-400"
-                  }`}>
-                    {opt.id.toUpperCase()}
-                  </span>
-                  <span>{opt.text}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Navigation Controls */}
-          <div className="flex justify-between pt-4 border-t border-white/10">
-            <button
-              disabled={currentIndex === 0}
-              onClick={() => setCurrentIndex(prev => prev - 1)}
-              className="px-4 py-2 rounded-xl border border-white/10 text-sm font-heading disabled:opacity-30 text-gray-300"
-            >
-              ⬅️ ข้อก่อนหน้า
-            </button>
-            
-            {currentIndex < questions.length - 1 ? (
-              <button
-                onClick={() => setCurrentIndex(prev => prev + 1)}
-                className="btn-emerald text-sm py-2 px-5"
-              >
-                ข้อถัดไป ➔
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                className="bg-amber-500 hover:bg-amber-600 text-black font-bold font-heading px-5 py-2 rounded-xl text-sm transition-all"
-              >
-                🏁 ส่งข้อสอบทันที
-              </button>
-            )}
-          </div>
+          ))}
         </div>
-
-        {/* Right Column: Question Palette Sidebar */}
-        <div className="glass-panel p-6 space-y-4 h-fit">
-          <h3 className="font-heading font-bold text-white text-base">ตารางข้อสอบ (Question Palette)</h3>
-          <p className="text-xs text-gray-400">คลิกหมายเลขเพื่อข้ามไปยังข้อนั้น</p>
-
-          <div className="grid grid-cols-4 gap-2">
-            {questions.map((q, idx) => {
-              const isAnswered = !!userAnswers[q.id];
-              const isCurrent = idx === currentIndex;
-              const isBookmarked = !!bookmarks[q.id];
-
-              let bgStyle = "bg-white/5 text-gray-400 border-white/10";
-              if (isAnswered) bgStyle = "bg-emerald-500/20 text-emerald-300 border-emerald-500/50";
-              if (isBookmarked) bgStyle = "bg-amber-500/20 text-amber-300 border-amber-500/50";
-              if (isCurrent) bgStyle += " border-2 border-amber-400 font-bold";
-
-              return (
-                <button
-                  key={q.id}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`aspect-square rounded-lg border text-sm flex items-center justify-center font-heading transition-all ${bgStyle}`}
-                >
-                  {idx + 1}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="pt-2 text-xs space-y-1 text-gray-400 font-heading">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded bg-emerald-500/30 border border-emerald-500"></span> ตอบแล้ว
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded bg-amber-500/30 border border-amber-500"></span> ปักหมุด
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded bg-white/5 border border-white/10"></span> ยังไม่ตอบ
-            </div>
-          </div>
-        </div>
-
       </div>
+
+      {/* Main Quiz Card */}
+      {filteredQuestions.length > 0 ? (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          
+          {/* Question & Options Area */}
+          <div className="lg:col-span-3 space-y-4">
+            <div className="glass-panel-emerald p-6 space-y-4 rounded-3xl">
+              
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-heading bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold">
+                  {currentQ.category}
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-amber-800 dark:text-amber-400 font-heading font-semibold">
+                    📖 {currentQ.scriptureRef}
+                  </span>
+                  <button
+                    onClick={() => toggleBookmark(currentQ.id)}
+                    className={`p-1.5 rounded-full text-xs transition-all ${
+                      bookmarked[currentQ.id] ? "bg-amber-500/20 text-amber-500" : "bg-white/5 text-gray-400 hover:text-white"
+                    }`}
+                    title="บุ๊กมาร์กไว้ทบทวน"
+                  >
+                    {bookmarked[currentQ.id] ? "★ บุ๊กมาร์กแล้ว" : "☆ บุ๊กมาร์ก"}
+                  </button>
+                </div>
+              </div>
+
+              <p className="text-base font-semibold leading-relaxed m-0 text-slate-950 dark:text-white">
+                ข้อ {currentIndex + 1}. {currentQ.questionText}
+              </p>
+
+              {/* Options */}
+              <div className="grid grid-cols-1 gap-2.5 text-sm pt-2">
+                {currentQ.options.map(opt => {
+                  const selectedOpt = selectedAnswers[currentQ.id];
+                  const isSelected = selectedOpt === opt.id;
+                  const isCorrect = opt.id === currentQ.correctOptionId;
+
+                  let btnStyle = "bg-slate-100 dark:bg-white/5 hover:bg-emerald-800/10 text-slate-900 dark:text-gray-200 border border-slate-200 dark:border-white/10 rounded-2xl";
+                  if (selectedOpt) {
+                    if (isSelected) {
+                      btnStyle = isCorrect
+                        ? "bg-emerald-800/20 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-500/50 rounded-2xl"
+                        : "bg-red-500/20 text-red-900 dark:text-red-300 border border-red-500/50 rounded-2xl";
+                    } else if (isCorrect) {
+                      btnStyle = "bg-emerald-800/15 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-500/30 rounded-2xl";
+                    }
+                  }
+
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => handleSelectOption(currentQ.id, opt.id)}
+                      className={`p-3.5 rounded-2xl text-left flex items-center gap-3 transition-all ${btnStyle}`}
+                    >
+                      <span className="w-7 h-7 rounded-full bg-emerald-900/10 dark:bg-white/10 flex items-center justify-center font-bold font-heading text-xs text-slate-900 dark:text-white">
+                        {opt.id.toUpperCase()}
+                      </span>
+                      <span className="font-medium">{opt.text}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Explanation Box */}
+              {showExplanation[currentQ.id] && (
+                <div className="p-4 rounded-2xl bg-amber-700/10 text-amber-950 dark:text-amber-100 text-sm space-y-2 border border-amber-700/20 animate-fadeIn">
+                  <div className="font-heading font-bold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
+                    <span>💡 เฉลยรายละเอียดอ้างอิงตำราสภาการแพทย์แผนไทย:</span>
+                  </div>
+                  <p className="text-xs leading-relaxed m-0 font-medium">{currentQ.explanation}</p>
+                </div>
+              )}
+
+              {/* Navigation Controls */}
+              <div className="flex justify-between items-center pt-2 font-heading">
+                <button
+                  disabled={currentIndex === 0}
+                  onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
+                  className="px-4 py-2 rounded-full bg-emerald-900/10 dark:bg-white/5 text-xs text-slate-900 dark:text-white disabled:opacity-40 font-semibold"
+                >
+                  ← ข้อก่อนหน้า
+                </button>
+                <button
+                  disabled={currentIndex === filteredQuestions.length - 1}
+                  onClick={() => setCurrentIndex(prev => Math.min(filteredQuestions.length - 1, prev + 1))}
+                  className="btn-emerald text-xs py-2 px-5"
+                >
+                  ข้อถัดไป ➔
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Question Palette Grid */}
+          <div className="glass-panel p-4 space-y-3 rounded-3xl h-fit">
+            <h3 className="text-xs font-bold font-heading text-slate-900 dark:text-white m-0">
+              📌 พาเลตข้อสอบ (Question Palette)
+            </h3>
+            <div className="grid grid-cols-5 gap-1.5 text-xs font-mono">
+              {filteredQuestions.map((q, idx) => {
+                const isCurrent = idx === currentIndex;
+                const isAnswered = !!selectedAnswers[q.id];
+                const isBookmarked = !!bookmarked[q.id];
+
+                let btnBg = "bg-slate-200 dark:bg-white/5 text-slate-700 dark:text-gray-400";
+                if (isAnswered) btnBg = "bg-emerald-800/20 text-emerald-900 dark:text-emerald-300 font-bold border border-emerald-500/40";
+                if (isCurrent) btnBg = "ring-2 ring-emerald-500 bg-emerald-600 text-white font-bold";
+
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`h-9 rounded-xl flex flex-col items-center justify-center relative transition-all ${btnBg}`}
+                  >
+                    <span>{idx + 1}</span>
+                    {isBookmarked && (
+                      <span className="absolute -top-1 -right-1 text-[9px] text-amber-500">★</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+        </div>
+      ) : (
+        <div className="glass-panel p-8 text-center space-y-3 rounded-3xl">
+          <div className="text-3xl">🔍</div>
+          <h3 className="text-base font-bold font-heading text-slate-900 dark:text-white">ไม่พบข้อสอบที่ตรงกับคำค้นหา</h3>
+          <p className="text-xs text-slate-600 dark:text-gray-400 font-medium">ลองเปลี่ยนคำค้นหา หรือคลิกเลือกหมวดทั้งหมด</p>
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setSelectedSubject("ALL");
+            }}
+            className="btn-emerald text-xs py-2 px-4"
+          >
+            🔄 รีเซ็ตการค้นหา
+          </button>
+        </div>
+      )}
 
     </div>
   );

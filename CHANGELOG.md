@@ -4,12 +4,16 @@
 
 ---
 
-## [v1.6.2-dcs-feature-innovation-analysis] - 2026-07-23 (Phase 3: Disney Creative Strategy WOW Feature Analysis)
+## [v1.6.3-wow-features-implementation-complete] - 2026-07-23 (Phase 3: AI Weakness Radar & PDF Certificate Implementation Complete)
 
 ### 📌 Development Checkpoint Status
-- [x] ร่วมกับ **Disney Creative Strategy Skill (`disney-creative-strategy`)** ทำการวิเคราะห์ 3 มุมมอง (Dreamer 🦄 ➔ Realist 🛠️ ➔ Critic ⚖️)
-- [x] ออกแบบ **5 ฟีเจอร์ระดับเปลี่ยนเกม (WOW Features)** ที่สร้างความประทับใจขั้นสูงสุด และสร้างเกราะป้องกันไม่ให้ผู้เรียนหนีไปหาแพลตฟอร์มอื่น
-- [x] บันทึกเอกสารวิเคราะห์ฉบับเต็มไว้ที่ [DCS_FEATURE_ANALYSIS.md](file:///d:/Antigravity/PassSapa/dev/docs/DCS_FEATURE_ANALYSIS.md)
+- [x] พัฒนาและเชื่อมต่อ **`WeaknessRadar.tsx` (AI Personal Weakness Radar)** เรดาร์วิเคราะห์จุดอ่อนรายบุคคล 5 สาขาวิชา + ปุ่มกด `[ ⚡ ติวซ่อมจุดอ่อน ]`
+- [x] พัฒนาและเชื่อมต่อ **`ReadinessCertificateModal.tsx` (PDF Readiness Certificate)** ใบรับรองความพร้อมสอบสภาฯ 75% พร้อมปุ่มดาวน์โหลด PDF และแชร์ลงโซเชียล
+- [x] ทดสอบสั่งรันคำสั่ง `npm run build` ผ่าน 100% (**✓ Compiled Successfully, 0 Errors**)
+- [x] Commit และ Push ขึ้น GitHub Branch **`feature/v1.6.0-dev`** เรียบร้อยแล้ว
 
-### 🛠️ Modified
-- `docs/DCS_FEATURE_ANALYSIS.md` - เอกสารวิเคราะห์ฟีเจอร์เปลี่ยนเกมฉบับเต็มผ่านโมเดล DCS
+### 🛠️ Added & Modified
+- `src/features/dashboard/WeaknessRadar.tsx` - คอมโพเนนต์เรดาร์จุดอ่อน AI และระบบซ่อมข้อสอบจุดอ่อน
+- `src/components/ReadinessCertificateModal.tsx` - คอมโพเนนต์ใบรับรองความพร้อมสอบสภาฯ PDF 75%
+- `src/features/dashboard/StudentDashboard.tsx` - ผูกปุ่มดูเรดาร์จุดอ่อนและใบรับรอง PDF
+- `app/page.tsx` - ส่งค่า userName ลงในหน้า Dashboard และ Certificate

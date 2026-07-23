@@ -4,13 +4,12 @@
 
 ---
 
-## [v1.7.0-master-wiring-sop-formalization] - 2026-07-23 (Phase 3: Master Wiring Check & QA SOP Formalization)
+## [v1.7.1-architect-final-audit-policy] - 2026-07-23 (Phase 3: System Architect Final Audit & Counter-Challenge Policy)
 
 ### 📌 Development Checkpoint Status
-- [x] ตราเอกสารคู่มือมาตรฐาน **`docs/MASTER_WIRING_SOP.md`** สำหรับกำกับการจดจำและการทำงานของระบบอย่างเป็นทางการ
-- [x] ล็อคกฎเหล็ก 4 ข้อ (Single Navigation Source, Modal State Sync, Dual HTML Sync, Zero Build Error)
-- [x] ล็อคตารางทดสอบท่อเชื่อมโยง 6 จุดหลัก (Master 6-Point Wiring Checklist) ก่อนการส่งมอบงานและ Git Push ทุกครั้ง 100%
+- [x] ตราข้อกำหนดเพิ่มเติมใน **`docs/MASTER_WIRING_SOP.md`** แต่งตั้งบทบาท **System Architect, System Engineer, System Analyst, UI/UX Designer & Fullstack Developer** ให้เป็นผู้กรองความเหมาะสมขั้นสุดท้าย
+- [x] มอบสิทธิ์ในการวีโต้ โต้แย้ง หรือปรับเปลี่ยนข้อเสนอจาก DCS Model หากไอเดียใดมีความไม่เหมาะสมทางวิศวกรรม สร้างภาระต่อระบบ หรือทำให้ท่อเชื่อมโยงขาดช่วง
 - [x] Commit และ Push ขึ้น GitHub Branch **`feature/v1.6.0-dev`** เรียบร้อยแล้ว
 
-### 🛠️ Added
-- `docs/MASTER_WIRING_SOP.md` - เอกสารสถาปัตยกรรมและ SOP ขั้นตอนการตรวจสอบและซิงค์ระบบ 100%
+### 🛠️ Modified
+- `docs/MASTER_WIRING_SOP.md` - เพิ่มข้อกำหนดสิทธิ์วีโต้และตรวจสอบขั้นสุดท้ายโดย System Architect

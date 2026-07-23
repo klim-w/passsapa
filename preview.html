@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PassSapa v1.6.0 - คลังข้อสอบสภาการแพทย์แผนไทย (ประเภท ก)</title>
+  <title>PassSapa v1.6.6 - คลังข้อสอบสภาการแพทย์แผนไทย (ประเภท ก)</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
@@ -85,7 +85,7 @@
     }
     .btn-emerald:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13, 122, 95, 0.4); }
     .tab-btn {
-      padding: 0.4rem 1rem;
+      padding: 0.4rem 1.2rem;
       border-radius: 9999px;
       font-size: 0.85rem;
       cursor: pointer;
@@ -118,7 +118,7 @@
 <body>
   <div class="container">
     
-    <!-- Top Navbar -->
+    <!-- Minimalist Top Navbar (คลีน ไม่ซ้ำซ้อน) -->
     <nav class="glass-panel sticky-nav flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div style="width:36px; height:36px; background:#042f2e; border-radius:12px; display:flex; align-items:center; justify-center:center; font-size:1.2rem;">
@@ -127,16 +127,15 @@
         <div>
           <div class="flex items-center gap-2">
             <strong style="font-size:1.1rem;" class="font-heading accent-green">PassSapa</strong>
-            <span class="badge badge-green">v1.6.0</span>
+            <span class="badge badge-green">v1.6.6</span>
           </div>
           <div class="sub-text" style="font-size:0.75rem;">คลังข้อสอบแพทย์แผนไทย ก</div>
         </div>
       </div>
       
-      <!-- Clean Single Line Sitemap -->
-      <div class="flex gap-1">
+      <!-- Streamlined Sitemap -->
+      <div class="flex gap-2">
         <button onclick="switchTab('tab-hero')" id="btn-hero" class="tab-btn active">🏠 หน้าแรก</button>
-        <button onclick="switchTab('tab-subjects')" id="btn-subjects" class="tab-btn">🌿 5 วิชา</button>
         <button onclick="switchTab('tab-pricing')" id="btn-pricing" class="tab-btn accent-gold">💳 ราคาแพ็กเกจ</button>
       </div>
 
@@ -190,36 +189,36 @@
           <div class="sub-text" style="font-size:0.8rem;">อนุมัติ VIP อัตโนมัติ</div>
         </div>
       </div>
-    </div>
 
-    <!-- SECTION 2: 5 SUBJECTS (Tab 2) -->
-    <div id="tab-subjects" class="tab-content hidden" style="margin-top:1.5rem;">
-      <h2 class="font-heading" style="font-size:1.3rem;">🌿 ครอบคลุม 5 วิชาสอบสภาการแพทย์แผนไทย (ประเภท ก)</h2>
-      <div class="grid grid-cols-5 gap-3" style="margin-top:1rem;">
-        <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
-          <div style="font-size:2rem;">📜</div>
-          <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">เวชกรรมไทย</h3>
-          <div class="sub-text" style="font-size:0.75rem;">ตักกศิลา ฉันทศาสตร์</div>
-        </div>
-        <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
-          <div style="font-size:2rem;">🧪</div>
-          <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">เภสัชกรรมไทย</h3>
-          <div class="sub-text" style="font-size:0.75rem;">รสยา 9 รส เภสัชวัตถุ</div>
-        </div>
-        <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
-          <div style="font-size:2rem;">👶</div>
-          <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">ผดุงครรภ์ไทย</h3>
-          <div class="sub-text" style="font-size:0.75rem;">ปฐมจินดารัตน์ ซาง</div>
-        </div>
-        <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
-          <div style="font-size:2rem;">🙌</div>
-          <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">นวดไทย</h3>
-          <div class="sub-text" style="font-size:0.75rem;">เส้นประธานสิบ</div>
-        </div>
-        <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
-          <div style="font-size:2rem;">⚖️</div>
-          <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">กฎหมายวิชาชีพ</h3>
-          <div class="sub-text" style="font-size:0.75rem;">พ.ร.บ. 2556 จรรยาบรรณ</div>
+      <!-- 5 SUBJECTS SECTION INSIDE LANDING PAGE -->
+      <div style="margin-top:1.5rem;">
+        <h2 class="font-heading" style="font-size:1.3rem;">🌿 ครอบคลุม 5 วิชาสอบสภาการแพทย์แผนไทย (ประเภท ก)</h2>
+        <div class="grid grid-cols-5 gap-3" style="margin-top:1rem;">
+          <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
+            <div style="font-size:2rem;">📜</div>
+            <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">เวชกรรมไทย</h3>
+            <div class="sub-text" style="font-size:0.75rem;">ตักกศิลา ฉันทศาสตร์</div>
+          </div>
+          <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
+            <div style="font-size:2rem;">🧪</div>
+            <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">เภสัชกรรมไทย</h3>
+            <div class="sub-text" style="font-size:0.75rem;">รสยา 9 รส เภสัชวัตถุ</div>
+          </div>
+          <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
+            <div style="font-size:2rem;">👶</div>
+            <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">ผดุงครรภ์ไทย</h3>
+            <div class="sub-text" style="font-size:0.75rem;">ปฐมจินดารัตน์ ซาง</div>
+          </div>
+          <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
+            <div style="font-size:2rem;">🙌</div>
+            <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">นวดไทย</h3>
+            <div class="sub-text" style="font-size:0.75rem;">เส้นประธานสิบ</div>
+          </div>
+          <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
+            <div style="font-size:2rem;">⚖️</div>
+            <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">กฎหมายวิชาชีพ</h3>
+            <div class="sub-text" style="font-size:0.75rem;">พ.ร.บ. 2556 จรรยาบรรณ</div>
+          </div>
         </div>
       </div>
     </div>

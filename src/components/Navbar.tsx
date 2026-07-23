@@ -54,45 +54,38 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Clean Single-Line Top Navigation Bar Sitemap (คอนทราสต์ คมชัด อ่านง่าย) */}
-        <div className="flex items-center gap-1 text-xs font-heading">
+        {/* Minimalist Single-Line Top Navigation Bar (มินิมอล คลีน ไม่ซ้ำซ้อน) */}
+        <div className="flex items-center gap-1.5 text-xs font-heading">
           <button
             onClick={() => onNavigate("landing")}
-            className={`px-3.5 py-1.5 rounded-full transition-all ${
+            className={`px-4 py-1.5 rounded-full transition-all ${
               currentView === "landing"
                 ? "bg-emerald-800/15 dark:bg-emerald-500/15 text-emerald-900 dark:text-emerald-400 font-bold"
-                : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300"
+                : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium"
             }`}
           >
             🏠 หน้าแรก
           </button>
 
-          {isLoggedIn ? (
+          {isLoggedIn && (
             <button
               onClick={() => onNavigate("dashboard")}
-              className={`px-3.5 py-1.5 rounded-full transition-all ${
+              className={`px-4 py-1.5 rounded-full transition-all ${
                 currentView === "dashboard" || currentView === "exam" || currentView === "flashcards"
                   ? "bg-emerald-800/15 dark:bg-emerald-500/15 text-emerald-900 dark:text-emerald-400 font-bold"
-                  : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300"
+                  : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium"
               }`}
             >
               📊 ห้องเรียนผู้เรียน
-            </button>
-          ) : (
-            <button
-              onClick={() => onNavigate("landing")}
-              className="hidden sm:inline-block px-3.5 py-1.5 rounded-full text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-all font-medium"
-            >
-              🌿 5 สาขาวิชา
             </button>
           )}
 
           <button
             onClick={() => onNavigate("pricing")}
-            className={`px-3.5 py-1.5 rounded-full transition-all ${
+            className={`px-4 py-1.5 rounded-full transition-all ${
               currentView === "pricing"
-                ? "bg-emerald-800/15 dark:bg-emerald-500/15 text-emerald-900 dark:text-emerald-400 font-bold"
-                : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300"
+                ? "bg-amber-700/15 dark:bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold"
+                : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium"
             }`}
           >
             💳 ราคาแพ็กเกจ

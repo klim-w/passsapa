@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { SAMPLE_SUBJECTS } from "../../lib/constants";
 import { WeaknessRadar } from "./WeaknessRadar";
 import { ReadinessCertificateModal } from "../../components/ReadinessCertificateModal";
+import { NotificationToast } from "../../components/NotificationToast";
 
 interface StudentDashboardProps {
   onNavigate: (view: string) => void;
@@ -13,10 +14,20 @@ interface StudentDashboardProps {
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate, userName = "คุณหมอ" }) => {
   const [activeSubTab, setActiveSubTab] = useState<"overview" | "exam" | "flashcards" | "analytics">("overview");
   const [certModalOpen, setCertModalOpen] = useState(false);
+  
+  // Custom Notification Toast State
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+
   const readinessScore = 78;
 
   const handleStartFixQuiz = (topic: string) => {
-    alert(`🎯 เปิดห้องทำข้อสอบติวซ่อมจุดอ่อนในหัวข้อ: "${topic}" เรียบร้อยแล้ว`);
+    setToastMessage(`เปิดห้องทำข้อสอบติวซ่อมจุดอ่อนในหัวข้อ: "${topic}" เรียบร้อยแล้ว`);
+    setToastOpen(true);
+  };
+
+  const handleToastClose = () => {
+    setToastOpen(false);
     onNavigate("exam");
   };
 
@@ -183,6 +194,15 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate, 
         userName={userName}
         readinessScore={readinessScore}
         onClose={() => setCertModalOpen(false)}
+      />
+
+      {/* Custom Centered Notification Toast (แทนที่ browser alert อัปลักษณ์) */}
+      <NotificationToast
+        isOpen={toastOpen}
+        title="🎯 เปิดห้องติวซ่อมจุดอ่อน"
+        message={toastMessage}
+        icon="🎯"
+        onClose={handleToastClose}
       />
 
     </div>

@@ -10,6 +10,7 @@ import { AdminPortal } from "../src/features/admin/AdminPortal";
 import { PaymentModal } from "../src/components/PaymentModal";
 import { AuthModal } from "../src/components/AuthModal";
 import { UserProfileModal } from "../src/components/UserProfileModal";
+import { NotificationToast } from "../src/components/NotificationToast";
 import { Footer } from "../src/components/Footer";
 
 export default function Home() {
@@ -28,12 +29,24 @@ export default function Home() {
 
   const [profileModalOpen, setProfileModalOpen] = useState(false);
 
+  // Custom Toast State
+  const [toastState, setToastState] = useState<{ open: boolean; title: string; message: string; icon: string }>({
+    open: false,
+    title: "",
+    message: "",
+    icon: "✨"
+  });
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
     setTheme(prev => (prev === "dark" ? "light" : "dark"));
+  };
+
+  const showToast = (title: string, message: string, icon = "✨") => {
+    setToastState({ open: true, title, message, icon });
   };
 
   const handleOpenAuth = (mode: "login" | "register") => {
@@ -46,7 +59,7 @@ export default function Home() {
     setIsLoggedIn(true);
     setUserPlan("สมาชิกทั่วไป");
     setAuthModalOpen(false);
-    alert(`🎉 เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับ ${name} เข้าสู่ระบบ PassSapa`);
+    showToast("🎉 เข้าสู่ระบบสำเร็จ!", `ยินดีต้อนรับ ${name} เข้าสู่ระบบ PassSapa`, "🔑");
     setCurrentView("dashboard");
   };
 
@@ -54,13 +67,13 @@ export default function Home() {
     setIsLoggedIn(false);
     setProfileModalOpen(false);
     setUserPlan("Guest");
-    alert("🚪 ออกจากระบบเรียบร้อยแล้ว");
+    showToast("🚪 ออกจากระบบสำเร็จ", "คุณหมอได้ออกจากระบบเรียบร้อยแล้ว", "👋");
     setCurrentView("landing");
   };
 
   const handleUpdateName = (newName: string) => {
     setUserName(newName);
-    alert(`💾 บันทึกชื่อผู้ใช้งานใหม่เป็น: ${newName} เรียบร้อยแล้ว`);
+    showToast("💾 บันทึกข้อมูลสำเร็จ", `บันทึกชื่อผู้ใช้งานใหม่เป็น: ${newName} เรียบร้อยแล้ว`, "👤");
   };
 
   const handleOpenPayment = (name: string, price: number) => {
@@ -72,7 +85,7 @@ export default function Home() {
     setPaymentModalOpen(false);
     setIsLoggedIn(true);
     setUserPlan("VIP Member ⭐");
-    alert("🎉 ชำระเงินสำเร็จผ่าน PromptPay! เข้าสู่ระบบในสิทธิ์ VIP เรียบร้อยแล้ว!");
+    showToast("🎉 ชำระเงินสำเร็จ!", "ระบบตรวจสอบผ่าน PromptPay เรียบร้อย เปิดสิทธิ์ VIP ให้อัตโนมัติใน 2 วินาที", "💎");
     setCurrentView("dashboard");
   };
 
@@ -150,6 +163,15 @@ export default function Home() {
         price={selectedPackage.price}
         onClose={() => setPaymentModalOpen(false)}
         onSuccess={handlePaymentSuccess}
+      />
+
+      {/* Custom Centered Notification Toast (แทนที่ browser alert อัปลักษณ์ 100%) */}
+      <NotificationToast
+        isOpen={toastState.open}
+        title={toastState.title}
+        message={toastState.message}
+        icon={toastState.icon}
+        onClose={() => setToastState(prev => ({ ...prev, open: false }))}
       />
 
       {/* Footer */}

@@ -96,7 +96,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
       </div>
 
       {/* SECTION 2: 5 SUBJECTS */}
-      <section className="space-y-4">
+      <section id="subjects-section" className="space-y-4 pt-2">
         <h2 className="text-xl font-bold font-heading flex items-center gap-2 m-0 text-slate-950 dark:text-white">
           🌿 ครอบคลุม 5 วิชาสอบสภาการแพทย์แผนไทย (ประเภท ก)
         </h2>
@@ -141,7 +141,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
       </section>
 
       {/* SECTION 3: DEMO QUIZ */}
-      <section className="glass-panel-emerald p-6 space-y-4 rounded-3xl">
+      <section id="demo-quiz-section" className="glass-panel-emerald p-6 space-y-4 rounded-3xl">
         <div className="flex items-center justify-between">
           <span className="text-xs font-heading bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold">
             🧪 ทดลองทำข้อสอบจริง 1 ข้อ (Interactive Demo)

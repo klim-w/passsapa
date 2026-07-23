@@ -7,7 +7,7 @@
 :root {
   --font-formal-body: 'Sarabun', 'TH Sarabun New', sans-serif;
   --font-heading: 'Prompt', 'Kanit', sans-serif;
-  --radius-card: 1.25rem; /* ขอบมนระดับพรีเมียม 20px */
+  --radius-card: 1.25rem;
   --radius-pill: 9999px;
 }
 
@@ -20,6 +20,79 @@ img {
 
 button {
   cursor: pointer;
+}
+
+/* ☀️ Light Mode Theme: "Sage Herbal Ivory" (โหมดสว่างงาช้างสมุนไพร - คอนทราสต์คมชัด AAA ถนอมสายตา ไม่แสบตา) */
+[data-theme="light"] {
+  --bg-primary: #eef3f0;
+  --bg-surface: #ffffff;
+  --bg-surface-subtle: #e1ebe6;
+  --text-main: #0b1915;
+  --text-muted: #3d5850;
+  --primary-green: #0d7a5f;
+  --accent-gold: #c27803;
+}
+
+[data-theme="light"] body {
+  background-color: #eef3f0 !important;
+  color: #0b1915 !important;
+}
+
+[data-theme="light"] nav {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid #d4e2dc !important;
+  color: #0b1915 !important;
+}
+
+[data-theme="light"] nav button {
+  color: #2a473e !important;
+}
+
+[data-theme="light"] .glass-panel {
+  background-color: #ffffff !important;
+  border: 1px solid #d4e2dc !important;
+  color: #0b1915 !important;
+  box-shadow: 0 4px 20px rgba(13, 122, 95, 0.06) !important;
+}
+
+[data-theme="light"] .glass-panel-emerald {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(13, 122, 95, 0.25) !important;
+  color: #0b1915 !important;
+  box-shadow: 0 6px 25px rgba(13, 122, 95, 0.08) !important;
+}
+
+[data-theme="light"] h1, 
+[data-theme="light"] h2, 
+[data-theme="light"] h3, 
+[data-theme="light"] h4 {
+  color: #0b1915 !important;
+}
+
+[data-theme="light"] p, 
+[data-theme="light"] span, 
+[data-theme="light"] div {
+  color: #1e332c;
+}
+
+[data-theme="light"] .text-white {
+  color: #0b1915 !important;
+}
+
+[data-theme="light"] .text-gray-400,
+[data-theme="light"] .text-gray-300,
+[data-theme="light"] .text-emerald-100\/80 {
+  color: #3d5850 !important;
+}
+
+[data-theme="light"] .text-emerald-300,
+[data-theme="light"] .text-emerald-400 {
+  color: #0d7a5f !important;
+}
+
+[data-theme="light"] .text-amber-300,
+[data-theme="light"] .text-amber-400 {
+  color: #c27803 !important;
 }
 
 /* 🌙 Night Mode CI Standard (เขียวหยก-ทองมิติ มนละมุน ถนอมสายตา) */
@@ -38,54 +111,18 @@ button {
   color: #f3f4f6 !important;
 }
 
-/* Borderless Rounded-2XL Cards for Night Mode */
 [data-theme="dark"] .glass-panel {
   background-color: #0c1412 !important;
   border: 1px solid rgba(255, 255, 255, 0.04) !important;
-  border-radius: 1.25rem !important; /* ขอบมนละมุน 20px */
+  border-radius: 1.25rem !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
 [data-theme="dark"] .glass-panel-emerald {
   background: linear-gradient(145deg, #0f1c18, #09120f) !important;
   border: 1px solid rgba(16, 185, 129, 0.12) !important;
-  border-radius: 1.5rem !important; /* ขอบมนพิเศษ 24px */
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* ☀️ Light Mode CI Standard (ขาวมรกตอุ่น มนละมุน คอนทราสต์คมชัด) */
-[data-theme="light"] {
-  --bg-primary: #f3f7f5;
-  --bg-surface: #ffffff;
-  --bg-surface-subtle: #e6f0ed;
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --primary-green: #0d9488;
-  --accent-gold: #d97706;
-}
-
-[data-theme="light"] body {
-  background-color: #f3f7f5 !important;
-  color: #0f172a !important;
-}
-
-[data-theme="light"] nav {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-}
-
-[data-theme="light"] .glass-panel {
-  background-color: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 1.25rem !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
-}
-
-[data-theme="light"] .glass-panel-emerald {
-  background-color: #ffffff !important;
-  border: 1px solid rgba(13, 148, 136, 0.2) !important;
   border-radius: 1.5rem !important;
-  box-shadow: 0 4px 20px rgba(13, 148, 136, 0.06) !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
 }
 
 body {
@@ -102,21 +139,21 @@ h1, h2, h3, h4, h5, h6, button, .font-heading {
 }
 
 .btn-emerald {
-  background: linear-gradient(135deg, #10b981, #059669) !important;
+  background: linear-gradient(135deg, #0d7a5f, #095945) !important;
   color: #ffffff !important;
   font-family: var(--font-heading);
   font-weight: 600;
   padding: 0.55rem 1.3rem !important;
-  border-radius: 9999px !important; /* ปุ่มขอบมนรูปทรงแคปซูล Rounded-Full */
+  border-radius: 9999px !important;
   border: none !important;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 4px 15px rgba(13, 122, 95, 0.25);
 }
 
 .btn-emerald:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 6px 20px rgba(13, 122, 95, 0.4);
 }

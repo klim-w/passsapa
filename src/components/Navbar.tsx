@@ -26,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenProfile,
 }) => {
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 dark:bg-[#060a09]/90 border-b border-slate-200 dark:border-white/[0.05] px-4 py-3 backdrop-blur-md transition-colors shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white/95 dark:bg-[#060a09]/90 border-b border-emerald-900/10 dark:border-white/[0.05] px-4 py-3 backdrop-blur-md transition-colors shadow-sm">
       <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
         
         {/* Brand Logo & Title */}
@@ -45,45 +45,43 @@ export const Navbar: React.FC<NavbarProps> = ({
             />
           </div>
           <div>
-            <h1 className="text-base md:text-lg font-bold font-heading bg-gradient-to-r from-emerald-600 to-amber-600 dark:from-emerald-400 dark:to-amber-400 bg-clip-text text-transparent m-0 leading-tight">
+            <h1 className="text-base md:text-lg font-bold font-heading bg-gradient-to-r from-emerald-800 to-amber-700 dark:from-emerald-400 dark:to-amber-400 bg-clip-text text-transparent m-0 leading-tight">
               PassSapa
             </h1>
-            <p className="text-[10px] text-slate-500 dark:text-emerald-200/60 font-heading m-0 leading-none hidden sm:block">
+            <p className="text-[10px] text-emerald-900/70 dark:text-emerald-200/60 font-heading m-0 leading-none hidden sm:block font-medium">
               คลังข้อสอบแพทย์แผนไทย ก
             </p>
           </div>
         </div>
 
-        {/* Clean Single-Line Top Navigation Bar Sitemap (เรียบหรู บรรทัดเดียว 100%) */}
+        {/* Clean Single-Line Top Navigation Bar Sitemap (คอนทราสต์ คมชัด อ่านง่าย) */}
         <div className="flex items-center gap-1 text-xs font-heading">
           <button
             onClick={() => onNavigate("landing")}
-            className={`px-3 py-1.5 rounded-full transition-all ${
+            className={`px-3.5 py-1.5 rounded-full transition-all ${
               currentView === "landing"
-                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-bold"
-                : "text-slate-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-300"
+                ? "bg-emerald-800/15 dark:bg-emerald-500/15 text-emerald-900 dark:text-emerald-400 font-bold"
+                : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300"
             }`}
           >
             🏠 หน้าแรก
           </button>
 
           {isLoggedIn ? (
-            /* สำหรับผู้ที่เข้าสู่ระบบแล้ว -> ห้องเรียน & คลังข้อสอบ (คุมคลังข้อสอบ & บัตรคำ ด้านใน) */
             <button
               onClick={() => onNavigate("dashboard")}
               className={`px-3.5 py-1.5 rounded-full transition-all ${
                 currentView === "dashboard" || currentView === "exam" || currentView === "flashcards"
-                  ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-bold"
-                  : "text-slate-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-300"
+                  ? "bg-emerald-800/15 dark:bg-emerald-500/15 text-emerald-900 dark:text-emerald-400 font-bold"
+                  : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300"
               }`}
             >
               📊 ห้องเรียนผู้เรียน
             </button>
           ) : (
-            /* สำหรับผู้เยี่ยมชมทั่วไป -> 5 สาขาวิชา */
             <button
               onClick={() => onNavigate("landing")}
-              className="hidden sm:inline-block px-3 py-1.5 rounded-full text-slate-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-all"
+              className="hidden sm:inline-block px-3.5 py-1.5 rounded-full text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-all font-medium"
             >
               🌿 5 สาขาวิชา
             </button>
@@ -91,21 +89,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onNavigate("pricing")}
-            className={`px-3 py-1.5 rounded-full transition-all ${
+            className={`px-3.5 py-1.5 rounded-full transition-all ${
               currentView === "pricing"
-                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-bold"
-                : "text-slate-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-300"
+                ? "bg-emerald-800/15 dark:bg-emerald-500/15 text-emerald-900 dark:text-emerald-400 font-bold"
+                : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300"
             }`}
           >
             💳 ราคาแพ็กเกจ
           </button>
         </div>
 
-        {/* Right Actions (Theme Switcher & User Profile Badge) */}
+        {/* Right Actions */}
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={onToggleTheme}
-            className="p-1.5 px-2.5 rounded-full bg-slate-100 dark:bg-white/[0.04] text-slate-700 dark:text-gray-300 text-xs font-heading hover:bg-slate-200 dark:hover:bg-white/[0.08] transition-all"
+            className="p-1.5 px-3 rounded-full bg-emerald-900/10 dark:bg-white/[0.04] text-emerald-900 dark:text-gray-300 text-xs font-heading hover:bg-emerald-900/20 dark:hover:bg-white/[0.08] transition-all font-medium"
           >
             {theme === "dark" ? "☀️ Light" : "🌙 Night"}
           </button>
@@ -114,26 +112,25 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => onOpenAuth && onOpenAuth("login")}
-                className="px-2.5 py-1.5 text-slate-700 dark:text-gray-300 text-xs font-heading hover:text-emerald-600 dark:hover:text-emerald-300 transition-all font-medium"
+                className="px-3 py-1.5 text-slate-900 dark:text-gray-300 text-xs font-heading hover:text-emerald-800 dark:hover:text-emerald-300 transition-all font-semibold"
               >
                 🔑 เข้าสู่ระบบ
               </button>
               <button
                 onClick={() => onOpenAuth && onOpenAuth("register")}
-                className="btn-emerald text-xs py-1.5 px-3.5"
+                className="btn-emerald text-xs py-1.5 px-4"
               >
                 🚀 สมัครสมาชิก
               </button>
             </div>
           ) : (
-            /* User Profile Badge (ปรับชื่อให้กระชับ เพื่อให้อยู่ในบรรทัดเดียวเสมอ) */
             <button
               onClick={onOpenProfile}
-              className="flex items-center gap-1.5 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.08] px-2.5 py-1 rounded-full text-xs font-heading text-slate-800 dark:text-emerald-300 font-medium cursor-pointer transition-all border border-slate-200 dark:border-emerald-500/20"
+              className="flex items-center gap-1.5 bg-emerald-900/10 dark:bg-white/[0.05] hover:bg-emerald-900/20 dark:hover:bg-white/[0.08] px-3 py-1 rounded-full text-xs font-heading text-slate-900 dark:text-emerald-300 font-semibold cursor-pointer transition-all border border-emerald-900/20 dark:border-emerald-500/20"
               title="คลิกเพื่อแก้ไขชื่อหรือออกจากระบบ (Logout)"
             >
               <span>👤 {userName ? (userName.length > 12 ? userName.substring(0, 10) + ".." : userName) : "คุณหมอ"}</span>
-              <span className="bg-emerald-500/20 text-emerald-800 dark:text-emerald-200 px-1.5 py-0.5 rounded-full font-bold text-[10px]">
+              <span className="bg-emerald-800/20 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-200 px-2 py-0.5 rounded-full font-bold text-[10px]">
                 {userPlan}
               </span>
             </button>

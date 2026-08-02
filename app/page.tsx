@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Navbar } from "../src/components/Navbar";
 import { LandingPage } from "../src/features/landing/LandingPage";
 import { StudentDashboard } from "../src/features/dashboard/StudentDashboard";
+import { BranchHub } from "../src/features/branch/BranchHub";
+import { PublicKnowledgeHub } from "../src/features/knowledge/PublicKnowledgeHub";
 import { ExamEngine } from "../src/features/exam/ExamEngine";
 import { FlashcardDeck } from "../src/features/flashcards/FlashcardDeck";
 import { AdminPortal } from "../src/features/admin/AdminPortal";
@@ -16,6 +18,8 @@ import { Footer } from "../src/components/Footer";
 
 export default function Home() {
   const [currentView, setCurrentView] = useState("landing");
+  const [examInitialFilter, setExamInitialFilter] = useState<any>(null);
+
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("คุณหมอสมชาย");
@@ -55,6 +59,14 @@ export default function Home() {
     setTheme(prev => (prev === "dark" ? "light" : "dark"));
   };
 
+  const handleNavigate = (view: string, extraState?: any) => {
+    if (view === "exam" && extraState) {
+      setExamInitialFilter(extraState);
+    }
+    setCurrentView(view);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const showToast = (title: string, message: string, icon = "✨") => {
     setToastState({ open: true, title, message, icon });
   };
@@ -69,8 +81,8 @@ export default function Home() {
     setIsLoggedIn(true);
     setUserPlan("สมาชิกทั่วไป");
     setAuthModalOpen(false);
-    showToast("🎉 เข้าสู่ระบบสำเร็จ!", `ยินดีต้อนรับ ${name} เข้าสู่ระบบ PassSapa`, "🔑");
-    setCurrentView("dashboard");
+    showToast("🎉 เข้าสู่ระบบสำเร็จ!", `ยินดีต้อนรับ ${name} เข้าสู่ระบบสมาชิก PassSapa`, "🔑");
+    setCurrentView("branch-hub");
   };
 
   const handleLogout = () => {
@@ -96,7 +108,7 @@ export default function Home() {
     setIsLoggedIn(true);
     setUserPlan("VIP Member ⭐");
     showToast("🎉 ชำระเงินสำเร็จ!", "ระบบตรวจสอบผ่าน PromptPay เรียบร้อย เปิดสิทธิ์ VIP ให้อัตโนมัติใน 2 วินาที", "💎");
-    setCurrentView("dashboard");
+    setCurrentView("branch-hub");
   };
 
   return (
@@ -105,7 +117,7 @@ export default function Home() {
       {/* Top Glassmorphic Navbar */}
       <Navbar
         currentView={currentView}
-        onNavigate={setCurrentView}
+        onNavigate={handleNavigate}
         theme={theme}
         onToggleTheme={toggleTheme}
         isLoggedIn={isLoggedIn}
@@ -115,21 +127,29 @@ export default function Home() {
         onOpenProfile={() => setProfileModalOpen(true)}
       />
 
-      {/* Main Content Area */}
+      {/* Main Content Area (T1 Routing Architecture) */}
       <main className="max-w-7xl mx-auto px-4 w-full flex-grow">
         {currentView === "landing" && (
           <LandingPage
-            onNavigate={setCurrentView}
+            onNavigate={handleNavigate}
             onOpenPayment={handleOpenPayment}
           />
         )}
 
+        {currentView === "knowledge" && (
+          <PublicKnowledgeHub onNavigate={handleNavigate} />
+        )}
+
+        {currentView === "branch-hub" && (
+          <BranchHub onNavigate={handleNavigate} />
+        )}
+
         {currentView === "dashboard" && (
-          <StudentDashboard onNavigate={setCurrentView} userName={userName} />
+          <StudentDashboard onNavigate={handleNavigate} userName={userName} />
         )}
 
         {currentView === "exam" && (
-          <ExamEngine onNavigate={setCurrentView} />
+          <ExamEngine onNavigate={handleNavigate} initialFilter={examInitialFilter} />
         )}
 
         {currentView === "flashcards" && (
@@ -138,7 +158,7 @@ export default function Home() {
 
         {currentView === "pricing" && (
           <LandingPage
-            onNavigate={setCurrentView}
+            onNavigate={handleNavigate}
             onOpenPayment={handleOpenPayment}
           />
         )}
@@ -175,7 +195,7 @@ export default function Home() {
         onSuccess={handlePaymentSuccess}
       />
 
-      {/* Custom Centered Notification Toast (แทนที่ browser alert อัปลักษณ์ 100%) */}
+      {/* Custom Centered Notification Toast */}
       <NotificationToast
         isOpen={toastState.open}
         title={toastState.title}
@@ -187,7 +207,7 @@ export default function Home() {
       {/* 📱 Mobile Floating Bottom Navigation Bar */}
       <MobileBottomNav
         currentView={currentView}
-        onNavigate={setCurrentView}
+        onNavigate={handleNavigate}
         isLoggedIn={isLoggedIn}
       />
 

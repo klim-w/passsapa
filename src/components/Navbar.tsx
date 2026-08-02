@@ -4,7 +4,7 @@ import React from "react";
 
 interface NavbarProps {
   currentView: string;
-  onNavigate: (view: string) => void;
+  onNavigate: (view: string, extraState?: any) => void;
   theme: "dark" | "light";
   onToggleTheme: () => void;
   isLoggedIn?: boolean;
@@ -65,12 +65,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               PassSapa
             </h1>
             <p className="text-[10px] text-emerald-900/70 dark:text-emerald-200/60 font-heading m-0 leading-none hidden sm:block font-medium">
-              คลังข้อสอบแพทย์แผนไทย ก
+              คลังข้อสอบแพทย์แผนไทย ก (ผัง T1)
             </p>
           </div>
         </div>
 
-        {/* Dynamic & Professional Smooth Anchor Navigation Bar (DCS Recommended Lineup) */}
+        {/* Dynamic Navigation Lineup (ตามสเปกผัง T1) */}
         <div className="hidden lg:flex items-center gap-1 text-xs font-heading">
           <button
             onClick={() => {
@@ -86,32 +86,36 @@ export const Navbar: React.FC<NavbarProps> = ({
             🏠 หน้าแรก
           </button>
 
-          {isLoggedIn && (
+          <button
+            onClick={() => onNavigate("knowledge")}
+            className={`px-3 py-1.5 rounded-full transition-all ${
+              currentView === "knowledge"
+                ? "bg-emerald-800/15 dark:bg-emerald-500/15 text-emerald-900 dark:text-emerald-400 font-bold"
+                : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium"
+            }`}
+          >
+            📚 องค์ความรู้
+          </button>
+
+          {isLoggedIn ? (
             <button
-              onClick={() => onNavigate("dashboard")}
+              onClick={() => onNavigate("branch-hub")}
               className={`px-3 py-1.5 rounded-full transition-all ${
-                currentView === "dashboard" || currentView === "exam" || currentView === "flashcards"
+                currentView === "branch-hub" || currentView === "dashboard" || currentView === "exam" || currentView === "flashcards"
                   ? "bg-emerald-800/15 dark:bg-emerald-500/15 text-emerald-900 dark:text-emerald-400 font-bold"
                   : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium"
               }`}
             >
-              📊 ห้องเรียนผู้เรียน
+              🌿 ระบบเลือกสาขา
+            </button>
+          ) : (
+            <button
+              onClick={() => handleScrollToSection("demo-quiz-section")}
+              className="px-3 py-1.5 rounded-full text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium transition-all"
+            >
+              🧪 ตัวอย่างข้อสอบ
             </button>
           )}
-
-          <button
-            onClick={() => handleScrollToSection("subjects-section")}
-            className="px-3 py-1.5 rounded-full text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium transition-all"
-          >
-            🌿 5 สาขาวิชา
-          </button>
-
-          <button
-            onClick={() => handleScrollToSection("demo-quiz-section")}
-            className="px-3 py-1.5 rounded-full text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium transition-all"
-          >
-            🧪 ทดลองทำข้อสอบ
-          </button>
 
           <button
             onClick={() => handleScrollToSection("pricing-section")}

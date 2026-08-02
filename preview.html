@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PassSapa v1.6.7 - คลังข้อสอบสภาการแพทย์แผนไทย (ประเภท ก)</title>
+  <title>PassSapa v1.8.0 - คลังข้อสอบสภาการแพทย์แผนไทย (ผัง T1)</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
@@ -119,7 +119,7 @@
 <body>
   <div class="container">
     
-    <!-- DCS Optimal Top Navbar -->
+    <!-- T1 Optimal Top Navbar -->
     <nav class="glass-panel sticky-nav flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div style="width:36px; height:36px; background:#042f2e; border-radius:12px; display:flex; align-items:center; justify-center:center; font-size:1.2rem;">
@@ -128,17 +128,18 @@
         <div>
           <div class="flex items-center gap-2">
             <strong style="font-size:1.1rem;" class="font-heading accent-green">PassSapa</strong>
-            <span class="badge badge-green">v1.6.7</span>
+            <span class="badge badge-green">v1.8.0 T1</span>
           </div>
-          <div class="sub-text" style="font-size:0.75rem;">คลังข้อสอบแพทย์แผนไทย ก</div>
+          <div class="sub-text" style="font-size:0.75rem;">คลังข้อสอบแพทย์แผนไทย ก (ผัง T1)</div>
         </div>
       </div>
       
-      <!-- Smooth Anchor Shortcuts -->
+      <!-- T1 Smooth Anchor Shortcuts -->
       <div class="flex gap-1">
         <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="tab-btn active">🏠 หน้าแรก</button>
-        <button onclick="document.getElementById('sec-subjects').scrollIntoView({behavior:'smooth'})" class="tab-btn">🌿 5 วิชา</button>
-        <button onclick="document.getElementById('sec-quiz').scrollIntoView({behavior:'smooth'})" class="tab-btn">🧪 ทดลองข้อสอบ</button>
+        <button onclick="document.getElementById('sec-knowledge').scrollIntoView({behavior:'smooth'})" class="tab-btn">📚 องค์ความรู้</button>
+        <button onclick="document.getElementById('sec-subjects').scrollIntoView({behavior:'smooth'})" class="tab-btn">🌿 5 วิชาหลัก</button>
+        <button onclick="document.getElementById('sec-quiz').scrollIntoView({behavior:'smooth'})" class="tab-btn">🧪 ตัวอย่างข้อสอบ</button>
         <button onclick="document.getElementById('sec-pricing').scrollIntoView({behavior:'smooth'})" class="tab-btn accent-gold">💳 ราคาแพ็กเกจ</button>
       </div>
 
@@ -159,17 +160,17 @@
     <!-- HERO SECTION -->
     <div style="margin-top:1.5rem;">
       <div class="glass-panel-emerald" style="padding:2rem;">
-        <span class="badge badge-amber">⏱️ Countdown: อีก 45 วัน สู่วันสอบสภาการแพทย์แผนไทย</span>
+        <span class="badge badge-amber">⏱️ Countdown: อีก 45 วัน สู่วันสอบสภาการแพทย์แผนไทย (ผัง T1)</span>
         <h1 style="font-size:2rem; margin:1rem 0 0.5rem 0;" class="font-heading">
           เตรียมสอบใบประกอบวิชาชีพ <br>
           <span class="accent-green">แพทย์แผนไทย ประเภท ก</span> ให้พร้อมในรอบเดียว
         </h1>
         <p class="sub-text" style="margin-bottom:1.5rem;">
-          คลังข้อสอบย้อนหลัง 5 วิชาหลัก เฉลยรายละเอียดอ้างอิงคัมภีร์สภาการแพทย์แผนไทย พร้อมระบบวิเคราะห์จุดอ่อนรายบุคคล
+          ครอบคลุม 5 สาขาวิชาหลัก พร้อมข้อสอบ 3 รูปแบบ (ปรนัย 5 ตัวเลือก A-E, อัตนัย, เติมคำในช่องว่าง) แยกภาคทฤษฎี (เวช 1/2) และภาคปฏิบัติ
         </p>
         <div class="flex gap-3">
           <button onclick="document.getElementById('sec-quiz').scrollIntoView({behavior:'smooth'})" class="btn-emerald">🚀 ทดลองทำข้อสอบฟรี</button>
-          <button onclick="document.getElementById('sec-pricing').scrollIntoView({behavior:'smooth'})" class="tab-btn" style="background:rgba(13,122,95,0.1); padding:0.6rem 1.4rem; font-weight:600;">💎 ดูแพ็กเกจราคา</button>
+          <button onclick="document.getElementById('sec-knowledge').scrollIntoView({behavior:'smooth'})" class="tab-btn" style="background:rgba(13,122,95,0.1); padding:0.6rem 1.4rem; font-weight:600;">📚 องค์ความรู้แพทย์แผนไทย</button>
         </div>
       </div>
 
@@ -177,7 +178,7 @@
       <div class="grid grid-cols-4 gap-3" style="margin-top:1rem;">
         <div class="glass-panel" style="padding:1rem; text-align:center;">
           <div class="accent-green font-heading" style="font-size:1.5rem; font-weight:bold;">8,500+</div>
-          <div class="sub-text" style="font-size:0.8rem;">คลังข้อสอบย้อนหลัง</div>
+          <div class="sub-text" style="font-size:0.8rem;">คลังข้อสอบย้อนหลัง T1</div>
         </div>
         <div class="glass-panel" style="padding:1rem; text-align:center;">
           <div class="accent-gold font-heading" style="font-size:1.5rem; font-weight:bold;">94.2%</div>
@@ -185,7 +186,7 @@
         </div>
         <div class="glass-panel" style="padding:1rem; text-align:center;">
           <div class="accent-green font-heading" style="font-size:1.5rem; font-weight:bold;">5 วิชา</div>
-          <div class="sub-text" style="font-size:0.8rem;">ครอบคลุมทุกสาขาสภาฯ</div>
+          <div class="sub-text" style="font-size:0.8rem;">ทฤษฎี + ปฏิบัติ + เนื้อหา</div>
         </div>
         <div class="glass-panel" style="padding:1rem; text-align:center;">
           <div class="accent-green font-heading" style="font-size:1.5rem; font-weight:bold;">24 ชม.</div>
@@ -194,34 +195,56 @@
       </div>
     </div>
 
+    <!-- PUBLIC KNOWLEDGE SECTION (ตามผัง T1) -->
+    <div id="sec-knowledge" style="margin-top:2rem; padding-top:1rem;">
+      <h2 class="font-heading" style="font-size:1.3rem;">📚 องค์ความรู้แพทย์แผนไทย (คลังบทความเปิดอ่านฟรี)</h2>
+      <div class="grid grid-cols-3 gap-3" style="margin-top:1rem;">
+        <div class="glass-panel" style="padding:1.2rem;">
+          <span class="badge badge-green">เวชกรรมไทย</span>
+          <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">องค์ความรู้ตำรับยาตักกศิลา</h3>
+          <div class="sub-text" style="font-size:0.8rem;">สรุปหลักการตั้งตำรับยาแก้ไข้พิษไข้กาฬตามคัมภีร์ตักกศิลา...</div>
+        </div>
+        <div class="glass-panel" style="padding:1.2rem;">
+          <span class="badge badge-green">เภสัชกรรมไทย</span>
+          <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">รสยา 9 รส และเภสัชวัตถุ</h3>
+          <div class="sub-text" style="font-size:0.8rem;">คู่มือท่องจำสรรพคุณรสยา 9 รส พร้อมเทคนิคการเทียบตัวยา...</div>
+        </div>
+        <div class="glass-panel" style="padding:1.2rem;">
+          <span class="badge badge-amber">คู่มือเตรียมสอบ</span>
+          <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">แนวทางการสอบภาคปฏิบัติประเภท ก</h3>
+          <div class="sub-text" style="font-size:0.8rem;">เจาะลึกการสอบภาคปฏิบัติ ข้อสอบอัตนัย และเติมคำในช่องว่าง...</div>
+        </div>
+      </div>
+    </div>
+
     <!-- 5 SUBJECTS SECTION -->
     <div id="sec-subjects" style="margin-top:2rem; padding-top:1rem;">
-      <h2 class="font-heading" style="font-size:1.3rem;">🌿 ครอบคลุม 5 วิชาสอบสภาการแพทย์แผนไทย (ประเภท ก)</h2>
+      <h2 class="font-heading" style="font-size:1.3rem;">🌿 ครอบคลุม 5 วิชาสอบสภาการแพทย์แผนไทย (ประเภท ก - ผัง T1)</h2>
       <div class="grid grid-cols-5 gap-3" style="margin-top:1rem;">
         <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
           <div style="font-size:2rem;">📜</div>
           <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">เวชกรรมไทย</h3>
-          <div class="sub-text" style="font-size:0.75rem;">ตักกศิลา ฉันทศาสตร์</div>
+          <div class="sub-text" style="font-size:0.75rem;">เนื้อหา • ทฤษฎี (เวช 1/2) • ปฏิบัติ</div>
         </div>
         <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
           <div style="font-size:2rem;">🧪</div>
           <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">เภสัชกรรมไทย</h3>
-          <div class="sub-text" style="font-size:0.75rem;">รสยา 9 รส เภสัชวัตถุ</div>
+          <div class="sub-text" style="font-size:0.75rem;">เนื้อหา • ทฤษฎี • ปฏิบัติ</div>
         </div>
         <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
           <div style="font-size:2rem;">👶</div>
           <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">ผดุงครรภ์ไทย</h3>
-          <div class="sub-text" style="font-size:0.75rem;">ปฐมจินดารัตน์ ซาง</div>
+          <div class="sub-text" style="font-size:0.75rem;">เนื้อหา • ทฤษฎี • ปฏิบัติ</div>
         </div>
         <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
           <div style="font-size:2rem;">🙌</div>
           <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">นวดไทย</h3>
-          <div class="sub-text" style="font-size:0.75rem;">เส้นประธานสิบ</div>
+          <div class="sub-text" style="font-size:0.75rem;">เนื้อหา • ทฤษฎี • ปฏิบัติ</div>
         </div>
         <div class="glass-panel-emerald" style="padding:1rem; text-align:center;">
           <div style="font-size:2rem;">⚖️</div>
           <h3 class="font-heading" style="font-size:1rem; margin:0.5rem 0 0.2rem 0;">กฎหมายวิชาชีพ</h3>
-          <div class="sub-text" style="font-size:0.75rem;">พ.ร.บ. 2556 จรรยาบรรณ</div>
+          <div class="sub-text" style="font-size:0.75rem;">เนื้อหา • ปรนัย 5 ตัวเลือก</div>
         </div>
       </div>
     </div>
@@ -229,7 +252,7 @@
     <!-- DEMO QUIZ SECTION -->
     <div id="sec-quiz" style="margin-top:2rem; padding-top:1rem;">
       <div class="glass-panel-emerald" style="padding:1.5rem;">
-        <span class="badge badge-green">🧪 ทดลองทำข้อสอบจริง 1 ข้อ (Interactive Demo)</span>
+        <span class="badge badge-green">🧪 ตัวอย่างแนวข้อสอบจริง (Interactive Demo)</span>
         <h2 class="font-heading" style="font-size:1.2rem; margin-top:1rem;">ผู้ป่วยมีอาการไข้สูง ปวดศีรษะ ร้อนใน กระศัยกระสับ ตาแดง มีเม็ดผื่นแดงขึ้นทั่วสรรพางค์กาย ถือเป็นไข้พิษชนิดใดในคัมภีร์ตักกศิลา?</h2>
         <div class="grid grid-cols-2 gap-3" style="margin-top:1rem;">
           <div class="glass-panel" style="padding:0.8rem; cursor:pointer;">A. ไข้กาฬลำพอง</div>

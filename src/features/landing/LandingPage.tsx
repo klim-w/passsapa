@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { SAMPLE_QUESTIONS, SAMPLE_NEWS, SAMPLE_PACKAGES } from "../../lib/constants";
+import { SAMPLE_QUESTIONS, SAMPLE_NEWS, SAMPLE_PACKAGES, SAMPLE_KNOWLEDGE_ARTICLES } from "../../lib/constants";
 
 interface LandingPageProps {
   onNavigate: (view: string) => void;
@@ -13,9 +13,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
   const demoQ = SAMPLE_QUESTIONS[0];
   const [selectedDemoOption, setSelectedDemoOption] = useState<string | null>(null);
   const [showDemoExplanation, setShowDemoExplanation] = useState(false);
-
-  // FAQ State
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const handleDemoSelect = (optId: string) => {
     setSelectedDemoOption(optId);
@@ -67,9 +64,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
               <button onClick={() => onNavigate("exam")} className="btn-emerald text-sm py-2.5 px-6 rounded-full shadow-lg">
                 🚀 ทดลองทำข้อสอบฟรี
               </button>
-              <a href="#pricing-section" className="px-6 py-2.5 rounded-full bg-emerald-900/10 dark:bg-white/5 text-slate-900 dark:text-white font-heading text-sm hover:bg-emerald-900/20 dark:hover:bg-white/10 transition-all font-semibold border border-emerald-900/15 dark:border-white/10 inline-flex items-center">
-                💎 ดูแพ็กเกจราคา
-              </a>
+              <button onClick={() => onNavigate("knowledge")} className="px-6 py-2.5 rounded-full bg-emerald-900/10 dark:bg-white/5 text-slate-900 dark:text-white font-heading text-sm hover:bg-emerald-900/20 dark:hover:bg-white/10 transition-all font-semibold border border-emerald-900/15 dark:border-white/10 inline-flex items-center gap-1.5">
+                📚 องค์ความรู้แพทย์แผนไทย
+              </button>
             </div>
           </div>
         </section>
@@ -95,42 +92,80 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
         </section>
       </div>
 
-      {/* SECTION 2: 5 SUBJECTS */}
+      {/* SECTION 2: องค์ความรู้แพทย์แผนไทย (Public Knowledge Highlights - ตามผัง T1) */}
+      <section id="knowledge-section" className="space-y-4 pt-2">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold font-heading flex items-center gap-2 m-0 text-slate-950 dark:text-white">
+            📚 องค์ความรู้แพทย์แผนไทย (เปิดอ่านฟรี)
+          </h2>
+          <button
+            onClick={() => onNavigate("knowledge")}
+            className="text-xs font-heading font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+          >
+            ดูบทความทั้งหมด ➔
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {SAMPLE_KNOWLEDGE_ARTICLES.map(art => (
+            <div
+              key={art.id}
+              onClick={() => onNavigate("knowledge")}
+              className="glass-panel p-5 space-y-3 rounded-2xl cursor-pointer hover:-translate-y-1 transition-all"
+            >
+              <div className="flex justify-between items-center">
+                <span className="bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-2.5 py-0.5 rounded-full text-xs font-heading font-semibold">
+                  {art.category}
+                </span>
+                <span className="text-[10px] text-gray-400">⏱️ {art.readTimeMinutes} นาที</span>
+              </div>
+              <h3 className="font-heading font-semibold text-sm m-0 text-slate-900 dark:text-white leading-snug">
+                {art.title}
+              </h3>
+              <p className="text-xs text-slate-700 dark:text-gray-300/80 m-0 font-medium line-clamp-2">
+                {art.summary}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* SECTION 3: 5 SUBJECTS */}
       <section id="subjects-section" className="space-y-4 pt-2">
         <h2 className="text-xl font-bold font-heading flex items-center gap-2 m-0 text-slate-950 dark:text-white">
           🌿 ครอบคลุม 5 วิชาสอบสภาการแพทย์แผนไทย (ประเภท ก)
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-          <div onClick={() => onNavigate("exam")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl">
+          <div onClick={() => onNavigate("branch-hub")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl">
             <div className="w-14 h-14 mx-auto rounded-2xl overflow-hidden shadow-sm">
               <img src="/images/icon_medicine.jpg" alt="เวชกรรมไทย" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
             <h3 className="font-heading font-semibold text-sm m-0 text-slate-900 dark:text-white">เวชกรรมไทย</h3>
             <p className="text-[11px] text-slate-700 dark:text-gray-400 m-0 font-medium">ตักกศิลา ฉันทศาสตร์</p>
           </div>
-          <div onClick={() => onNavigate("exam")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl">
+          <div onClick={() => onNavigate("branch-hub")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl">
             <div className="w-14 h-14 mx-auto rounded-2xl overflow-hidden shadow-sm">
               <img src="/images/icon_pharmacy.jpg" alt="เภสัชกรรมไทย" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
             <h3 className="font-heading font-semibold text-sm m-0 text-slate-900 dark:text-white">เภสัชกรรมไทย</h3>
             <p className="text-[11px] text-slate-700 dark:text-gray-400 m-0 font-medium">รสยา 9 รส เภสัชวัตถุ</p>
           </div>
-          <div onClick={() => onNavigate("exam")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl">
+          <div onClick={() => onNavigate("branch-hub")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl">
             <div className="w-14 h-14 mx-auto rounded-2xl overflow-hidden shadow-sm">
               <img src="/images/icon_midwifery.jpg" alt="ผดุงครรภ์ไทย" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
             <h3 className="font-heading font-semibold text-sm m-0 text-slate-900 dark:text-white">ผดุงครรภ์ไทย</h3>
             <p className="text-[11px] text-slate-700 dark:text-gray-400 m-0 font-medium">ปฐมจินดารัตน์ ซาง</p>
           </div>
-          <div onClick={() => onNavigate("exam")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl">
+          <div onClick={() => onNavigate("branch-hub")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl">
             <div className="w-14 h-14 mx-auto rounded-2xl overflow-hidden shadow-sm">
               <img src="/images/icon_massage.jpg" alt="นวดไทย" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
             <h3 className="font-heading font-semibold text-sm m-0 text-slate-900 dark:text-white">นวดไทย</h3>
             <p className="text-[11px] text-slate-700 dark:text-gray-400 m-0 font-medium">เส้นประธานสิบ</p>
           </div>
-          <div onClick={() => onNavigate("exam")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl col-span-2 md:col-span-1">
+          <div onClick={() => onNavigate("branch-hub")} className="glass-panel-emerald p-4 text-center space-y-2 cursor-pointer hover:-translate-y-1 transition-all rounded-2xl col-span-2 md:col-span-1">
             <div className="w-14 h-14 mx-auto rounded-2xl overflow-hidden shadow-sm">
               <img src="/images/icon_law.jpg" alt="กฎหมายวิชาชีพ" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
@@ -140,11 +175,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
         </div>
       </section>
 
-      {/* SECTION 3: DEMO QUIZ */}
+      {/* SECTION 4: ตัวอย่างแนวข้อสอบ (DEMO QUIZ - ตามผัง T1) */}
       <section id="demo-quiz-section" className="glass-panel-emerald p-6 space-y-4 rounded-3xl">
         <div className="flex items-center justify-between">
           <span className="text-xs font-heading bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold">
-            🧪 ทดลองทำข้อสอบจริง 1 ข้อ (Interactive Demo)
+            🧪 ตัวอย่างแนวข้อสอบจริง (Interactive Demo)
           </span>
           <span className="text-xs text-amber-800 dark:text-amber-400 font-heading font-semibold">
             {demoQ.category} • {demoQ.scriptureRef}
@@ -156,7 +191,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          {demoQ.options.map(opt => {
+          {demoQ.options?.map(opt => {
             const isSelected = selectedDemoOption === opt.id;
             const isCorrect = opt.id === demoQ.correctOptionId;
 
@@ -192,7 +227,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
         )}
       </section>
 
-      {/* SECTION 4: NEWS */}
+      {/* SECTION 5: NEWS */}
       <section className="space-y-4">
         <h2 className="text-xl font-bold font-heading m-0 text-slate-950 dark:text-white">📢 ข่าวสารและประกาศผลสอบสภาการแพทย์แผนไทย</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -208,7 +243,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
         </div>
       </section>
 
-      {/* SECTION 5: PRICING SECTION */}
+      {/* SECTION 6: PRICING SECTION */}
       <section id="pricing-section" className="space-y-4 pt-4">
         <h2 className="text-xl font-bold font-heading text-center m-0 text-slate-950 dark:text-white">💳 เลือกแพ็กเกจติวสอบ PassSapa</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -230,7 +265,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
         </div>
       </section>
 
-      {/* SECTION 6: FAQ */}
+      {/* SECTION 7: FAQ */}
       <section className="glass-panel p-6 space-y-4 rounded-3xl">
         <h2 className="text-xl font-bold font-heading text-center m-0 text-slate-950 dark:text-white">❓ คำถามที่พบบ่อย (FAQ)</h2>
         <div className="space-y-2">

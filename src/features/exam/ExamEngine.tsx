@@ -2,32 +2,58 @@
 
 import React, { useState } from "react";
 import { SAMPLE_QUESTIONS } from "../../lib/constants";
+import { QuestionItem } from "../../lib/types";
 
 interface ExamEngineProps {
   onNavigate: (view: string) => void;
+  initialFilter?: {
+    category?: string;
+    part?: string;
+    subCategory?: string;
+    typeFilter?: string;
+  };
 }
 
-export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
-  const [questions, setQuestions] = useState(SAMPLE_QUESTIONS);
+export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate, initialFilter }) => {
+  const [questions] = useState<QuestionItem[]>(SAMPLE_QUESTIONS);
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // MCQ selection answers
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  // Fill-in-the-blank text answers
+  const [fillBlankText, setFillBlankText] = useState<Record<string, string>>({});
+  // Subjective essay text answers
+  const [subjectiveText, setSubjectiveText] = useState<Record<string, string>>({});
+
   const [bookmarked, setBookmarked] = useState<Record<string, boolean>>({});
   const [showExplanation, setShowExplanation] = useState<Record<string, boolean>>({});
   
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("ALL");
+  const [selectedSubject, setSelectedSubject] = useState<string>(initialFilter?.category || "ALL");
+  const [selectedPart, setSelectedPart] = useState<string>(initialFilter?.part || "ALL");
+  const [selectedSubCat, setSelectedSubCat] = useState<string>(initialFilter?.subCategory || "ALL");
 
   const filteredQuestions = questions.filter(q => {
     const matchQuery = q.questionText.includes(searchQuery) || q.explanation.includes(searchQuery) || q.scriptureRef.includes(searchQuery);
     const matchSubject = selectedSubject === "ALL" || q.category === selectedSubject;
-    return matchQuery && matchSubject;
+    const matchPart = selectedPart === "ALL" || q.examPart === selectedPart || (!q.examPart && selectedPart === "theory");
+    const matchSubCat = selectedSubCat === "ALL" || q.subCategory === selectedSubCat;
+    return matchQuery && matchSubject && matchPart && matchSubCat;
   });
 
   const currentQ = filteredQuestions[currentIndex] || filteredQuestions[0] || SAMPLE_QUESTIONS[0];
 
-  const handleSelectOption = (qId: string, optId: string) => {
+  const handleSelectMCQOption = (qId: string, optId: string) => {
     setSelectedAnswers(prev => ({ ...prev, [qId]: optId }));
+    setShowExplanation(prev => ({ ...prev, [qId]: true }));
+  };
+
+  const handleCheckFillInBlank = (qId: string) => {
+    setShowExplanation(prev => ({ ...prev, [qId]: true }));
+  };
+
+  const handleShowSubjectiveRubric = (qId: string) => {
     setShowExplanation(prev => ({ ...prev, [qId]: true }));
   };
 
@@ -42,14 +68,14 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-emerald-500/20 pb-3">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => onNavigate("dashboard")}
+            onClick={() => onNavigate("branch-hub")}
             className="p-2 rounded-full bg-emerald-900/10 dark:bg-white/5 hover:bg-emerald-900/20 text-slate-900 dark:text-white text-xs font-heading font-semibold"
           >
-            ← กลับหน้าหลัก
+            ← กลับหน้าเลือกสาขา
           </button>
           <div>
             <h1 className="text-lg font-bold font-heading text-slate-950 dark:text-white m-0 flex items-center gap-2">
-              ✍️ ห้องจำลองสอบสภาการแพทย์แผนไทย (180 นาที)
+              ✍️ ห้องจำลองสอบสภาการแพทย์แผนไทย (T1 Exam Engine)
             </h1>
             <p className="text-xs text-slate-700 dark:text-gray-400 m-0 font-medium">
               ข้อที่ {currentIndex + 1} จากทั้งหมด {filteredQuestions.length} ข้อในหมวดนี้
@@ -63,13 +89,13 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* 🔍 Search & Scripture Filter Bar (ฟีเจอร์ค้นหาและกรองข้อสอบ) */}
+      {/* 🔍 Search & Scripture Filter Bar (ตามสเปก T1) */}
       <div className="glass-panel p-4 rounded-2xl flex flex-col md:flex-row items-center gap-3">
         <div className="relative flex-1 w-full">
           <span className="absolute left-3 top-2.5 text-xs text-gray-400">🔍</span>
           <input
             type="text"
-            placeholder="ค้นหาโจทย์ คัมภีร์ หรือคำศัพท์ (เช่น 'ตักกศิลา', 'รสยา')..."
+            placeholder="ค้นหาโจทย์ คัมภีร์ หรือคำศัพท์ (เช่น 'ตักกศิลา', 'รสยา', 'เหือด')..."
             value={searchQuery}
             onChange={e => {
               setSearchQuery(e.target.value);
@@ -81,7 +107,7 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
 
         {/* Subject Filter Pills */}
         <div className="flex flex-wrap gap-1.5 text-xs font-heading shrink-0">
-          {["ALL", "เวชกรรมไทย", "เภสัชกรรมไทย", "ผดุงครรภ์ไทย", "นวดไทย", "กฎหมายวิชาชีพ"].map(subj => (
+          {["ALL", "เวชกรรมไทย", "เภสัชกรรมไทย", "ผดุงครรภ์ไทย", "นวดไทย", "กฎหมายและจรรยาบรรณวิชาชีพ"].map(subj => (
             <button
               key={subj}
               onClick={() => {
@@ -104,14 +130,27 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
       {filteredQuestions.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           
-          {/* Question & Options Area */}
+          {/* Question & Answers Area */}
           <div className="lg:col-span-3 space-y-4">
             <div className="glass-panel-emerald p-6 space-y-4 rounded-3xl">
               
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-heading bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold">
-                  {currentQ.category}
-                </span>
+              <div className="flex justify-between items-center flex-wrap gap-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-heading bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold">
+                    {currentQ.category}
+                  </span>
+                  {currentQ.examPart && (
+                    <span className="text-[11px] font-heading bg-amber-700/15 text-amber-900 dark:text-amber-300 px-2.5 py-0.5 rounded-full font-bold">
+                      {currentQ.examPart === "theory" ? "📘 ภาคทฤษฎี" : "🛠️ ภาคปฏิบัติ"}
+                    </span>
+                  )}
+                  {currentQ.subCategory && currentQ.subCategory !== "ทั่วไป" && (
+                    <span className="text-[11px] font-heading bg-teal-700/15 text-teal-900 dark:text-teal-300 px-2.5 py-0.5 rounded-full font-bold">
+                      📜 {currentQ.subCategory}
+                    </span>
+                  )}
+                </div>
+
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-amber-800 dark:text-amber-400 font-heading font-semibold">
                     📖 {currentQ.scriptureRef}
@@ -132,44 +171,100 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
                 ข้อ {currentIndex + 1}. {currentQ.questionText}
               </p>
 
-              {/* Options */}
-              <div className="grid grid-cols-1 gap-2.5 text-sm pt-2">
-                {currentQ.options.map(opt => {
-                  const selectedOpt = selectedAnswers[currentQ.id];
-                  const isSelected = selectedOpt === opt.id;
-                  const isCorrect = opt.id === currentQ.correctOptionId;
+              {/* RENDER TYPE 1: ปรนัย 5 ตัวเลือก (MCQ 5 choices: A-E) */}
+              {(!currentQ.questionType || currentQ.questionType === "mcq_5") && currentQ.options && (
+                <div className="grid grid-cols-1 gap-2.5 text-sm pt-2">
+                  {currentQ.options.map(opt => {
+                    const selectedOpt = selectedAnswers[currentQ.id];
+                    const isSelected = selectedOpt === opt.id;
+                    const isCorrect = opt.id === currentQ.correctOptionId;
 
-                  let btnStyle = "bg-slate-100 dark:bg-white/5 hover:bg-emerald-800/10 text-slate-900 dark:text-gray-200 border border-slate-200 dark:border-white/10 rounded-2xl";
-                  if (selectedOpt) {
-                    if (isSelected) {
-                      btnStyle = isCorrect
-                        ? "bg-emerald-800/20 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-500/50 rounded-2xl"
-                        : "bg-red-500/20 text-red-900 dark:text-red-300 border border-red-500/50 rounded-2xl";
-                    } else if (isCorrect) {
-                      btnStyle = "bg-emerald-800/15 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-500/30 rounded-2xl";
+                    let btnStyle = "bg-slate-100 dark:bg-white/5 hover:bg-emerald-800/10 text-slate-900 dark:text-gray-200 border border-slate-200 dark:border-white/10 rounded-2xl";
+                    if (selectedOpt) {
+                      if (isSelected) {
+                        btnStyle = isCorrect
+                          ? "bg-emerald-800/20 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-500/50 rounded-2xl"
+                          : "bg-red-500/20 text-red-900 dark:text-red-300 border border-red-500/50 rounded-2xl";
+                      } else if (isCorrect) {
+                        btnStyle = "bg-emerald-800/15 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-500/30 rounded-2xl";
+                      }
                     }
-                  }
 
-                  return (
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => handleSelectMCQOption(currentQ.id, opt.id)}
+                        className={`p-3.5 rounded-2xl text-left flex items-center gap-3 transition-all ${btnStyle}`}
+                      >
+                        <span className="w-7 h-7 rounded-full bg-emerald-900/10 dark:bg-white/10 flex items-center justify-center font-bold font-heading text-xs text-slate-900 dark:text-white">
+                          {opt.id.toUpperCase()}
+                        </span>
+                        <span className="font-medium">{opt.text}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* RENDER TYPE 2: ข้อสอบเติมคำในช่องว่าง (Fill-in-the-blank) */}
+              {currentQ.questionType === "fill_in_blank" && (
+                <div className="space-y-3 pt-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="พิมพ์คำตอบเติมในช่องว่างที่นี่..."
+                      value={fillBlankText[currentQ.id] || ""}
+                      onChange={e => setFillBlankText(prev => ({ ...prev, [currentQ.id]: e.target.value }))}
+                      className="flex-1 bg-slate-100 dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-body"
+                    />
                     <button
-                      key={opt.id}
-                      onClick={() => handleSelectOption(currentQ.id, opt.id)}
-                      className={`p-3.5 rounded-2xl text-left flex items-center gap-3 transition-all ${btnStyle}`}
+                      onClick={() => handleCheckFillInBlank(currentQ.id)}
+                      className="btn-emerald text-xs px-5 rounded-2xl shrink-0"
                     >
-                      <span className="w-7 h-7 rounded-full bg-emerald-900/10 dark:bg-white/10 flex items-center justify-center font-bold font-heading text-xs text-slate-900 dark:text-white">
-                        {opt.id.toUpperCase()}
-                      </span>
-                      <span className="font-medium">{opt.text}</span>
+                      ตรวจคำตอบ ➔
                     </button>
-                  );
-                })}
-              </div>
+                  </div>
+                  {showExplanation[currentQ.id] && currentQ.correctAnswerText && (
+                    <div className="p-3 rounded-2xl bg-emerald-900/20 border border-emerald-500/40 text-xs text-emerald-950 dark:text-emerald-200 font-heading">
+                      <strong>คำตอบที่ถูกต้อง:</strong> "{currentQ.correctAnswerText}"
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* RENDER TYPE 3: ข้อสอบอัตนัย (Subjective Essay) */}
+              {currentQ.questionType === "subjective" && (
+                <div className="space-y-3 pt-2">
+                  <textarea
+                    rows={4}
+                    placeholder="พิมพ์ตอบข้อสอบอัตนัยบรรยายรายละเอียดที่นี่..."
+                    value={subjectiveText[currentQ.id] || ""}
+                    onChange={e => setSubjectiveText(prev => ({ ...prev, [currentQ.id]: e.target.value }))}
+                    className="w-full bg-slate-100 dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded-2xl p-4 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-body"
+                  />
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => handleShowSubjectiveRubric(currentQ.id)}
+                      className="btn-emerald text-xs py-2 px-5 rounded-2xl"
+                      style={{ background: "linear-gradient(135deg, #c27803, #92400e)" }}
+                    >
+                      💡 ดูแนวทางเฉลยและเกณฑ์ตรวจอัตนัย ➔
+                    </button>
+                  </div>
+                  {showExplanation[currentQ.id] && currentQ.subjectiveRubric && (
+                    <div className="p-4 rounded-2xl bg-amber-900/20 border border-amber-500/40 text-xs text-amber-950 dark:text-amber-100 font-body space-y-1">
+                      <strong className="font-heading text-amber-900 dark:text-amber-300 block">📜 แนวทางเฉลยคำตอบอัตนัย:</strong>
+                      <p className="m-0 leading-relaxed">{currentQ.subjectiveRubric}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Explanation Box */}
               {showExplanation[currentQ.id] && (
                 <div className="p-4 rounded-2xl bg-amber-700/10 text-amber-950 dark:text-amber-100 text-sm space-y-2 border border-amber-700/20 animate-fadeIn">
                   <div className="font-heading font-bold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
-                    <span>💡 เฉลยรายละเอียดอ้างอิงตำราสภาการแพทย์แผนไทย:</span>
+                    <span>💡 คำอธิบายเฉลยเพิ่มเติมอ้างอิงคัมภีร์สภาฯ:</span>
                   </div>
                   <p className="text-xs leading-relaxed m-0 font-medium">{currentQ.explanation}</p>
                 </div>
@@ -199,12 +294,12 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
           {/* Question Palette Grid */}
           <div className="glass-panel p-4 space-y-3 rounded-3xl h-fit">
             <h3 className="text-xs font-bold font-heading text-slate-900 dark:text-white m-0">
-              📌 พาเลตข้อสอบ (Question Palette)
+              📌 พาเลตข้อสอบ ({filteredQuestions.length} ข้อ)
             </h3>
             <div className="grid grid-cols-5 gap-1.5 text-xs font-mono">
               {filteredQuestions.map((q, idx) => {
                 const isCurrent = idx === currentIndex;
-                const isAnswered = !!selectedAnswers[q.id];
+                const isAnswered = !!selectedAnswers[q.id] || !!fillBlankText[q.id] || !!subjectiveText[q.id];
                 const isBookmarked = !!bookmarked[q.id];
 
                 let btnBg = "bg-slate-200 dark:bg-white/5 text-slate-700 dark:text-gray-400";
@@ -231,12 +326,14 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate }) => {
       ) : (
         <div className="glass-panel p-8 text-center space-y-3 rounded-3xl">
           <div className="text-3xl">🔍</div>
-          <h3 className="text-base font-bold font-heading text-slate-900 dark:text-white">ไม่พบข้อสอบที่ตรงกับคำค้นหา</h3>
-          <p className="text-xs text-slate-600 dark:text-gray-400 font-medium">ลองเปลี่ยนคำค้นหา หรือคลิกเลือกหมวดทั้งหมด</p>
+          <h3 className="text-base font-bold font-heading text-slate-900 dark:text-white">ไม่พบข้อสอบในหมวดนี้</h3>
+          <p className="text-xs text-slate-600 dark:text-gray-400 font-medium">ลองเปลี่ยนหมวดการกรอง หรือคลิกเลือกหมวดทั้งหมด</p>
           <button
             onClick={() => {
               setSearchQuery("");
               setSelectedSubject("ALL");
+              setSelectedPart("ALL");
+              setSelectedSubCat("ALL");
             }}
             className="btn-emerald text-xs py-2 px-4"
           >

@@ -33,13 +33,26 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate, initialFilte
   const [selectedSubject, setSelectedSubject] = useState<string>(initialFilter?.category || "ALL");
   const [selectedPart, setSelectedPart] = useState<string>(initialFilter?.part || "ALL");
   const [selectedSubCat, setSelectedSubCat] = useState<string>(initialFilter?.subCategory || "ALL");
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState<string>(initialFilter?.typeFilter || "ALL");
 
   const filteredQuestions = questions.filter(q => {
     const matchQuery = q.questionText.includes(searchQuery) || q.explanation.includes(searchQuery) || q.scriptureRef.includes(searchQuery);
     const matchSubject = selectedSubject === "ALL" || q.category === selectedSubject;
     const matchPart = selectedPart === "ALL" || q.examPart === selectedPart || (!q.examPart && selectedPart === "theory");
     const matchSubCat = selectedSubCat === "ALL" || q.subCategory === selectedSubCat;
-    return matchQuery && matchSubject && matchPart && matchSubCat;
+    
+    let matchType = true;
+    if (selectedTypeFilter === "subjective") {
+      matchType = q.questionType === "subjective";
+    } else if (selectedTypeFilter === "fill_in_blank_mcq") {
+      matchType = q.questionType === "fill_in_blank" || q.questionType === "mcq_5";
+    } else if (selectedTypeFilter === "fill_in_blank") {
+      matchType = q.questionType === "fill_in_blank";
+    } else if (selectedTypeFilter === "mcq_5") {
+      matchType = q.questionType === "mcq_5";
+    }
+
+    return matchQuery && matchSubject && matchPart && matchSubCat && matchType;
   });
 
   const currentQ = filteredQuestions[currentIndex] || filteredQuestions[0] || SAMPLE_QUESTIONS[0];
@@ -75,7 +88,7 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate, initialFilte
           </button>
           <div>
             <h1 className="text-lg font-bold font-heading text-slate-950 dark:text-white m-0 flex items-center gap-2">
-              ✍️ ห้องจำลองสอบสภาการแพทย์แผนไทย (T1 Exam Engine)
+              ✍️ ห้องจำลองสอบสภาการแพทย์แผนไทย (ผัง T2 Exam Engine)
             </h1>
             <p className="text-xs text-slate-700 dark:text-gray-400 m-0 font-medium">
               ข้อที่ {currentIndex + 1} จากทั้งหมด {filteredQuestions.length} ข้อในหมวดนี้
@@ -89,7 +102,7 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate, initialFilte
         </div>
       </div>
 
-      {/* 🔍 Search & Scripture Filter Bar (ตามสเปก T1) */}
+      {/* 🔍 Search & Scripture Filter Bar (ตามผังใหม่ T2) */}
       <div className="glass-panel p-4 rounded-2xl flex flex-col md:flex-row items-center gap-3">
         <div className="relative flex-1 w-full">
           <span className="absolute left-3 top-2.5 text-xs text-gray-400">🔍</span>
@@ -112,6 +125,7 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate, initialFilte
               key={subj}
               onClick={() => {
                 setSelectedSubject(subj);
+                setSelectedTypeFilter("ALL");
                 setCurrentIndex(0);
               }}
               className={`px-3 py-1 rounded-full transition-all ${
@@ -147,6 +161,11 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate, initialFilte
                   {currentQ.subCategory && currentQ.subCategory !== "ทั่วไป" && (
                     <span className="text-[11px] font-heading bg-teal-700/15 text-teal-900 dark:text-teal-300 px-2.5 py-0.5 rounded-full font-bold">
                       📜 {currentQ.subCategory}
+                    </span>
+                  )}
+                  {currentQ.questionType && (
+                    <span className="text-[10px] font-heading bg-white/10 text-gray-300 px-2 py-0.5 rounded-full">
+                      {currentQ.questionType === "mcq_5" ? "🔘 ปรนัย 5 ตัวเลือก" : currentQ.questionType === "fill_in_blank" ? "📝 เติมคำในช่องว่าง" : "✍️ อัตนัย"}
                     </span>
                   )}
                 </div>
@@ -326,7 +345,7 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate, initialFilte
       ) : (
         <div className="glass-panel p-8 text-center space-y-3 rounded-3xl">
           <div className="text-3xl">🔍</div>
-          <h3 className="text-base font-bold font-heading text-slate-900 dark:text-white">ไม่พบข้อสอบในหมวดนี้</h3>
+          <h3 className="text-base font-bold font-heading text-slate-950 dark:text-white">ไม่พบข้อสอบในหมวดนี้</h3>
           <p className="text-xs text-slate-600 dark:text-gray-400 font-medium">ลองเปลี่ยนหมวดการกรอง หรือคลิกเลือกหมวดทั้งหมด</p>
           <button
             onClick={() => {
@@ -334,6 +353,7 @@ export const ExamEngine: React.FC<ExamEngineProps> = ({ onNavigate, initialFilte
               setSelectedSubject("ALL");
               setSelectedPart("ALL");
               setSelectedSubCat("ALL");
+              setSelectedTypeFilter("ALL");
             }}
             className="btn-emerald text-xs py-2 px-4"
           >

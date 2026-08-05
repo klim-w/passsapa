@@ -13,7 +13,7 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
   const [selectedSubject, setSelectedSubject] = useState<SubjectCategory>("เวชกรรมไทย");
   const [activeTab, setActiveTab] = useState<"content" | "theory" | "practical">("content");
   const [theorySubCategory, setTheorySubCategory] = useState<SubCategory>("เวช 1");
-  const [practicalTypeFilter, setPracticalTypeFilter] = useState<"ALL" | "subjective" | "fill_in_blank" | "mcq_5">("ALL");
+  const [practicalTypeFilter, setPracticalTypeFilter] = useState<"ALL" | "subjective" | "fill_in_blank_mcq" | "fill_in_blank" | "mcq_5">("ALL");
 
   const currentSubjectObj = SAMPLE_SUBJECTS.find(s => s.name === selectedSubject) || SAMPLE_SUBJECTS[0];
 
@@ -31,7 +31,16 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
   const practicalQuestions = SAMPLE_QUESTIONS.filter(q => {
     const isCategory = q.category === selectedSubject;
     const isPractical = q.examPart === "practical";
-    const isType = practicalTypeFilter === "ALL" || q.questionType === practicalTypeFilter;
+    let isType = true;
+    if (practicalTypeFilter === "subjective") {
+      isType = q.questionType === "subjective";
+    } else if (practicalTypeFilter === "fill_in_blank_mcq") {
+      isType = q.questionType === "fill_in_blank" || q.questionType === "mcq_5";
+    } else if (practicalTypeFilter === "fill_in_blank") {
+      isType = q.questionType === "fill_in_blank";
+    } else if (practicalTypeFilter === "mcq_5") {
+      isType = q.questionType === "mcq_5";
+    }
     return isCategory && isPractical && isType;
   });
 
@@ -44,6 +53,21 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
     });
   };
 
+  // Determine practical filters based on subject (ตามผังใหม่ T2)
+  const isMed = selectedSubject === "เวชกรรมไทย";
+  const practicalFilterOptions = isMed
+    ? [
+        { id: "ALL", label: "ทั้งหมด" },
+        { id: "subjective", label: "✍️ ข้อสอบอัตนัย" },
+        { id: "fill_in_blank", label: "📝 ข้อสอบเติมคำในช่องว่าง" },
+        { id: "mcq_5", label: "🔘 ข้อสอบปรนัย 5 ตัวเลือก" },
+      ]
+    : [
+        { id: "ALL", label: "ทั้งหมด" },
+        { id: "subjective", label: "✍️ ข้อสอบอัตนัย" },
+        { id: "fill_in_blank_mcq", label: "📝 ข้อสอบเติมคำในช่องว่าง/ ปรนัย" },
+      ];
+
   return (
     <div className="space-y-6 py-4 max-w-6xl mx-auto">
       
@@ -52,7 +76,7 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-emerald-500/20 pb-3">
           <div>
             <span className="text-xs font-heading bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold">
-              🌿 ระบบเลือกสาขาวิชา (Member Branch Selector)
+              🌿 ระบบเลือกสาขาวิชา (Member Branch Selector - ผัง T2)
             </span>
             <h1 className="text-xl md:text-2xl font-bold font-heading text-slate-950 dark:text-white mt-1 m-0">
               ศูนย์การเรียนรู้ {selectedSubject}
@@ -67,7 +91,7 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
           </button>
         </div>
 
-        {/* 5 Branch Selection Pills (ตามผัง T1) */}
+        {/* 5 Branch Selection Pills (ตามผังใหม่ T2) */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2 font-heading text-xs">
           {SAMPLE_SUBJECTS.map(subj => {
             const isSelected = selectedSubject === subj.name as SubjectCategory;
@@ -77,6 +101,7 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
                 onClick={() => {
                   setSelectedSubject(subj.name as SubjectCategory);
                   setActiveTab("content");
+                  setPracticalTypeFilter("ALL");
                   if (subj.name === "เวชกรรมไทย") setTheorySubCategory("เวช 1");
                 }}
                 className={`p-3 rounded-2xl flex items-center justify-center gap-2 transition-all cursor-pointer ${
@@ -93,7 +118,7 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Sub-Tab Bar: เนื้อหา / ภาคทฤษฎี / ภาคปฏิบัติ (ตามผัง T1) */}
+      {/* Sub-Tab Bar: เนื้อหา / ภาคทฤษฎี / ภาคปฏิบัติ (ตามผังใหม่ T2) */}
       <div className="glass-panel p-2 rounded-2xl flex flex-wrap gap-2 text-xs font-heading">
         <button
           onClick={() => setActiveTab("content")}
@@ -126,7 +151,7 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
                 : "text-slate-700 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
-            🛠️ ภาคปฏิบัติ (อัตนัย / เติมคำ / ปรนัย)
+            🛠️ ภาคปฏิบัติ ({isMed ? "อัตนัย / เติมคำ / ปรนัย 5 ตัวเลือก" : "อัตนัย / เติมคำในช่องว่าง/ ปรนัย"})
           </button>
         )}
       </div>
@@ -179,7 +204,7 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
           <div className="p-4 rounded-2xl bg-emerald-900/10 dark:bg-white/5 space-y-3 border border-emerald-500/20">
             <div className="flex justify-between items-center text-xs text-slate-800 dark:text-gray-300 font-heading">
               <span>ชุดข้อสอบทฤษฎีที่มีในคลัง: <strong className="text-emerald-700 dark:text-emerald-400 font-bold">{theoryQuestions.length} ข้อ</strong></span>
-              <span className="text-amber-800 dark:text-amber-300 font-bold">ปรนัย 5 ตัวเลือก</span>
+              <span className="text-amber-800 dark:text-amber-300 font-bold">ข้อสอบปรนัย 5 ตัวเลือก</span>
             </div>
 
             <p className="text-xs text-slate-700 dark:text-gray-300 m-0 leading-relaxed font-medium">
@@ -196,27 +221,25 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
         </div>
       )}
 
-      {/* TAB 3: ภาคปฏิบัติ (Practical Exams: อัตนัย / เติมคำ / ปรนัย) */}
+      {/* TAB 3: ภาคปฏิบัติ (Practical Exams - ตามผังใหม่ T2) */}
       {activeTab === "practical" && selectedSubject !== "กฎหมายและจรรยาบรรณวิชาชีพ" && (
         <div className="glass-panel-emerald p-6 space-y-4 rounded-3xl">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
               <span className="text-xs font-heading bg-amber-700/15 text-amber-900 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">
-                🛠️ ภาคปฏิบัติ: {selectedSubject}
+                🛠️ ภาคปฏิบัติ: {selectedSubject} (ผัง T2)
               </span>
               <h2 className="text-lg font-bold font-heading text-slate-950 dark:text-white mt-1 m-0">
-                คลังข้อสอบภาคปฏิบัติ (ข้อสอบอัตนัย, เติมคำในช่องว่าง, และปรนัย)
+                {isMed 
+                  ? "คลังข้อสอบภาคปฏิบัติ (ข้อสอบอัตนัย, ข้อสอบเติมคำในช่องว่าง, ข้อสอบปรนัย 5 ตัวเลือก)"
+                  : "คลังข้อสอบภาคปฏิบัติ (ข้อสอบอัตนัย, ข้อสอบเติมคำในช่องว่าง/ ปรนัย)"
+                }
               </h2>
             </div>
 
-            {/* Filter Types for Practical */}
-            <div className="flex flex-wrap gap-1 text-xs font-heading">
-              {[
-                { id: "ALL", label: "ทั้งหมด" },
-                { id: "subjective", label: "✍️ อัตนัย" },
-                { id: "fill_in_blank", label: "📝 เติมคำ" },
-                { id: "mcq_5", label: "🔘 ปรนัย" },
-              ].map(type => (
+            {/* Filter Types for Practical (ตรงตามผังใหม่ T2) */}
+            <div className="flex flex-wrap gap-1.5 text-xs font-heading">
+              {practicalFilterOptions.map(type => (
                 <button
                   key={type.id}
                   onClick={() => setPracticalTypeFilter(type.id as any)}
@@ -235,11 +258,13 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
           <div className="p-4 rounded-2xl bg-amber-900/10 dark:bg-white/5 space-y-3 border border-amber-500/20">
             <div className="flex justify-between items-center text-xs text-slate-800 dark:text-gray-300 font-heading">
               <span>ข้อสอบปฏิบัติพร้อมทดสอบ: <strong className="text-amber-700 dark:text-amber-300 font-bold">{practicalQuestions.length} ข้อ</strong></span>
-              <span className="text-emerald-700 dark:text-emerald-400 font-bold">อัตนัย + เติมคำ + ปรนัย</span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-bold">
+                {isMed ? "อัตนัย + เติมคำ + ปรนัย 5 ตัวเลือก" : "อัตนัย + เติมคำในช่องว่าง/ ปรนัย"}
+              </span>
             </div>
 
             <p className="text-xs text-slate-700 dark:text-gray-300 m-0 leading-relaxed font-medium">
-              ข้อสอบภาคปฏิบัติเน้นประเมินการตั้งตำรับยา การวินิจฉัยโรค และการเขียนระบุคำเฉลยอย่างละเอียด เพื่อเตรียมความพร้อมสำหรับการสอบสนามจริง
+              ข้อสอบภาคปฏิบัติเน้นประเมินการวินิจฉัยโรค การเขียนระบุคำเฉลย และการเลือกคำตอบที่ถูกต้องตามผังมาตรฐานใหม่ T2
             </p>
 
             <button

@@ -4,18 +4,20 @@
 
 ---
 
-## [v1.9.0-diagram-t2-upgraded] - 2026-08-05 (Phase 5: Diagram T2 Full Architecture Upgrade)
+## [v2.0.0-admin-backend-portal-released] - 2026-08-05 (Phase 6: Professional Admin Backend System v2.0 Release)
 
 ### 📌 Development Checkpoint Status
-- [x] ศึกษาและยกระดับสถาปัตยกรรมระบบให้ตรงตาม **ผังใหม่ (Requirement Diagram T2)** 100%
-- [x] อัปเดตหมวดภาคปฏิบัติสำหรับ 3 สาขาวิชา (**เภสัชกรรมไทย**, **ผดุงครรภ์ไทย**, **นวดไทย**) ให้รองรับ **`ข้อสอบเติมคำในช่องว่าง/ ปรนัย`**
-- [x] อัปเดตหมวดภาคปฏิบัติสำหรับ **เวชกรรมไทย** ให้รองรับ **`ข้อสอบปรนัย 5 ตัวเลือก`** ชัดเจนเคียงคู่กับ อัตนัย และ เติมคำในช่องว่าง
-- [x] ปรับเปลี่ยน Filter Label และเมนูส่วนหน้าให้แสดงผลตรงกับข้อความผังใหม่ T2 ทุกจุด
+- [x] ออกแบบและพัฒนาระบบ **Admin หลังบ้าน (PassSapa Admin Portal v2.0)** ครอบคลุม 5 หมวดหลัก 100%
+- [x] **หมวดที่ 1: 📊 Executive Overview & Live Monitoring** - การ์ดสถิติตัวเลขสำคัญ และ Real-time Activity Feed
+- [x] **หมวดที่ 2: 👥 User & VIP Support Center** - ตารางผู้ใช้งาน พร้อมเครื่องมือแก้ปัญหาด่วน:
+  - ⚡ **`[ 🔓 อนุมัติสิทธิ์ VIP ด่วน 1/3/6 เดือน ]`**
+  - 🔄 **`[ 🔄 รีเซ็ตประวัติทำข้อสอบ ]`**
+  - 🔑 **`[ 🔑 รีเซ็ตรหัสผ่าน / ปลดล็อกบัญชี ]`**
+- [x] **หมวดที่ 3: ✍️ Question Bank Manager (T2 Diagram)** - จัดการคลังข้อสอบ 5 สาขาวิชา รองรับ ปรนัย 5 ตัวเลือก (A-E), เติมคำในช่องว่าง, อัตนัย (บรรยาย) และ เวช 1/2
+- [x] **หมวดที่ 4: 📚 Knowledge Base Editor** - จัดการบทความองค์ความรู้และข่าวประกาศสภาฯ
+- [x] **หมวดที่ 5: 🛠️ Support Audit Trail** - บันทึก PromptPay Transaction Logs และ Admin Audit Trail
 - [x] ผ่านการทดสอบ Build 100% (**✓ Compiled Successfully, 0 Errors**)
 - [x] Commit และ Push ขึ้น GitHub Branches **`main`** และ **`feature/v1.6.0-dev`** เรียบร้อยแล้ว
 
 ### 🛠️ Modified
-- `src/lib/constants.ts` - เพิ่มชุดข้อสอบภาคปฏิบัติประเภท ปรนัย 5 ตัวเลือก และ เติมคำ/ปรนัย ครบ 5 สาขา
-- `src/features/branch/BranchHub.tsx` - อัปเดตการแสดงผลและตัวกรองภาคปฏิบัติให้ตรงกับผังใหม่ T2
-- `src/features/exam/ExamEngine.tsx` - อัปเดตระบบสอบและ Tag แสดงผลตามผังใหม่ T2
-- `index.html` & `preview.html` - อัปเดตสแน็ปช็อตสแตนอโลน static HTML ให้ซิงค์ตรงตามผังใหม่ T2
+- `src/features/admin/AdminPortal.tsx` - ปรับปรุงเป็นระบบ Admin 5 หมวดหลักระดับมืออาชีพ 100%

@@ -4,18 +4,18 @@
 
 ---
 
-## [v2.1.0-session-and-view-persistence-released] - 2026-08-05 (Phase 7: Full Session & View Persistence Upgrade)
+## [v2.2.0-isolated-standalone-admin-route-released] - 2026-08-05 (Phase 8: Isolated Standalone Admin Portal Route Upgrade)
 
 ### 📌 Development Checkpoint Status
-- [x] เพิ่มระบบ **Session & View Memory Persistence** จดจำหน้าและเมนูล่าสุดผ่าน `localStorage` 100%
-- [x] เมื่อผู้ใช้รีเฟรชเบราว์เซอร์ (F5 / Refresh) ระบบจะจดจำ:
-  - 📌 **หน้าปัจจุบัน (Active View)** เช่น อยู่หน้าเลือกสาขาวิชา (`branch-hub`), แดชบอร์ด (`dashboard`), ห้องสอบ (`exam`), คลังบทความ (`knowledge`), หรือ Admin (`admin`)
-  - 👤 **สถานะเข้าสู่ระบบ (User Session)** เช่น เข้าสู่ระบบแล้ว, ชื่อผู้ใช้, สถานะสิทธิ์ VIP
-  - 🌿 **สาขาวิชาและแท็บบทเรียนล่าสุด** ใน `BranchHub` (เช่น เวชกรรมไทย, ภาคปฏิบัติ, อัตนัย/เติมคำ)
-  - ✍️ **ตัวกรองคลังข้อสอบล่าสุด** ใน `ExamEngine`
+- [x] แยกหน้าระบบ **Admin หลังบ้านออกเป็น URL Route อิสระระดับความปลอดภัยเฉพาะทาง (`/admin`)** 100%
+- [x] **ลบปุ่ม `⚙️ หลังบ้าน Admin` ออกจาก Navbar ฝั่งผู้ใช้งานทั่วไป** ป้องกันผู้เรียน/ผู้ใช้ทั่วไปเห็นปุ่มผู้ดูแลระบบ
+- [x] เพิ่มระบบ **Admin Security Lock Screen (Passcode Lock)** สำหรับกรอกรหัสผ่านความปลอดภัย ( Passcode: `passsapa2026` / `admin2026` ) ก่อนเปิดเข้าใช้งานระบบ Admin Portal
+- [x] แยก Route การ Compile ชัดเจนใน Next.js:
+  - `○ /` (หน้าหลักผู้ใช้งานทั่วไป)
+  - `○ /admin` (หน้าหลังบ้านผู้ดูแลระบบ)
 - [x] ผ่านการทดสอบ Build 100% (**✓ Compiled Successfully, 0 Errors**)
 - [x] Commit และ Push ขึ้น GitHub Branches **`main`** และ **`feature/v1.6.0-dev`** เรียบร้อยแล้ว
 
 ### 🛠️ Modified
-- `app/page.tsx` - เพิ่ม `useEffect` ดึงและบันทึก `currentView`, `isLoggedIn`, `userName`, `userPlan`, `examInitialFilter` ลงใน `localStorage`
-- `src/features/branch/BranchHub.tsx` - เพิ่ม `useEffect` ดึงและบันทึก `selectedSubject`, `activeTab`, `theorySubCategory`, `practicalTypeFilter` ลงใน `localStorage`
+- `src/components/Navbar.tsx` - ลบปุ่ม Admin ออกจาก Navbar หน้าบ้านฝั่งผู้ใช้
+- `app/admin/page.tsx` - สร้างหน้าระบบ Admin แยกต่างหากพร้อมระบบ Security Lock Screen

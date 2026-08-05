@@ -70,7 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Dynamic Navigation Lineup (ตามสเปกผัง T2) */}
+        {/* Dynamic Navigation Lineup (ตามสเปกผัง T2 - เฉพาะเมนูของผู้ใช้งาน) */}
         <div className="hidden lg:flex items-center gap-1 text-xs font-heading">
           <button
             onClick={() => {
@@ -126,18 +126,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             💳 ราคาแพ็กเกจ
-          </button>
-
-          {/* ⚙️ Admin Portal Shortcut Link */}
-          <button
-            onClick={() => onNavigate("admin")}
-            className={`px-3 py-1.5 rounded-full transition-all ${
-              currentView === "admin"
-                ? "bg-amber-500/20 text-amber-900 dark:text-amber-300 font-bold border border-amber-500/30"
-                : "text-amber-800 dark:text-amber-400 hover:text-amber-600 font-medium"
-            }`}
-          >
-            ⚙️ หลังบ้าน Admin
           </button>
         </div>
 

@@ -65,12 +65,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               PassSapa
             </h1>
             <p className="text-[10px] text-emerald-900/70 dark:text-emerald-200/60 font-heading m-0 leading-none hidden sm:block font-medium">
-              คลังข้อสอบแพทย์แผนไทย ก (ผัง T1)
+              คลังข้อสอบแพทย์แผนไทย ก (ผัง T2)
             </p>
           </div>
         </div>
 
-        {/* Dynamic Navigation Lineup (ตามสเปกผัง T1) */}
+        {/* Dynamic Navigation Lineup (ตามสเปกผัง T2) */}
         <div className="hidden lg:flex items-center gap-1 text-xs font-heading">
           <button
             onClick={() => {
@@ -126,6 +126,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             💳 ราคาแพ็กเกจ
+          </button>
+
+          {/* ⚙️ Admin Portal Shortcut Link */}
+          <button
+            onClick={() => onNavigate("admin")}
+            className={`px-3 py-1.5 rounded-full transition-all ${
+              currentView === "admin"
+                ? "bg-amber-500/20 text-amber-900 dark:text-amber-300 font-bold border border-amber-500/30"
+                : "text-amber-800 dark:text-amber-400 hover:text-amber-600 font-medium"
+            }`}
+          >
+            ⚙️ หลังบ้าน Admin
           </button>
         </div>
 

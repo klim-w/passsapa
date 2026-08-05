@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SubjectCategory, ExamPart, SubCategory } from "../../lib/types";
 import { SAMPLE_SUBJECTS, SAMPLE_STUDY_MATERIALS, SAMPLE_QUESTIONS } from "../../lib/constants";
 import { BranchContentViewer } from "./BranchContentViewer";
@@ -14,6 +14,37 @@ export const BranchHub: React.FC<BranchHubProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<"content" | "theory" | "practical">("content");
   const [theorySubCategory, setTheorySubCategory] = useState<SubCategory>("เวช 1");
   const [practicalTypeFilter, setPracticalTypeFilter] = useState<"ALL" | "subjective" | "fill_in_blank_mcq" | "fill_in_blank" | "mcq_5">("ALL");
+
+  // 💾 Restore Branch Hub State from localStorage on Mount
+  useEffect(() => {
+    try {
+      const savedSubj = localStorage.getItem("passsapa_branch_subject") as SubjectCategory | null;
+      if (savedSubj) setSelectedSubject(savedSubj);
+
+      const savedTab = localStorage.getItem("passsapa_branch_tab") as "content" | "theory" | "practical" | null;
+      if (savedTab) setActiveTab(savedTab);
+
+      const savedSubCat = localStorage.getItem("passsapa_branch_theory_subcat") as SubCategory | null;
+      if (savedSubCat) setTheorySubCategory(savedSubCat);
+
+      const savedPracFilter = localStorage.getItem("passsapa_branch_prac_filter") as any;
+      if (savedPracFilter) setPracticalTypeFilter(savedPracFilter);
+    } catch (err) {
+      console.error("Failed to load branch state from localStorage:", err);
+    }
+  }, []);
+
+  // 💾 Save Branch Hub State to localStorage on Change
+  useEffect(() => {
+    try {
+      localStorage.setItem("passsapa_branch_subject", selectedSubject);
+      localStorage.setItem("passsapa_branch_tab", activeTab);
+      localStorage.setItem("passsapa_branch_theory_subcat", theorySubCategory);
+      localStorage.setItem("passsapa_branch_prac_filter", practicalTypeFilter);
+    } catch (err) {
+      console.error("Failed to save branch state to localStorage:", err);
+    }
+  }, [selectedSubject, activeTab, theorySubCategory, practicalTypeFilter]);
 
   const currentSubjectObj = SAMPLE_SUBJECTS.find(s => s.name === selectedSubject) || SAMPLE_SUBJECTS[0];
 

@@ -17,7 +17,7 @@ import { MobileBottomNav } from "../src/components/MobileBottomNav";
 import { Footer } from "../src/components/Footer";
 
 export default function Home() {
-  const [currentView, setCurrentView] = useState("landing");
+  const [currentView, setCurrentView] = useState<string>("landing");
   const [examInitialFilter, setExamInitialFilter] = useState<any>(null);
 
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -42,14 +42,47 @@ export default function Home() {
     icon: "✨"
   });
 
-  // 🌙 Theme Memory (ดึงค่าธีมที่บันทึกไว้ใน localStorage)
+  // 💾 Restore Session, View, User Data & Theme from localStorage on Initial Mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem("passsapa_theme") as "dark" | "light" | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
+    try {
+      const savedView = localStorage.getItem("passsapa_current_view");
+      if (savedView) setCurrentView(savedView);
+
+      const savedLogin = localStorage.getItem("passsapa_is_logged_in");
+      if (savedLogin !== null) setIsLoggedIn(savedLogin === "true");
+
+      const savedName = localStorage.getItem("passsapa_user_name");
+      if (savedName) setUserName(savedName);
+
+      const savedPlan = localStorage.getItem("passsapa_user_plan");
+      if (savedPlan) setUserPlan(savedPlan);
+
+      const savedExamFilter = localStorage.getItem("passsapa_exam_initial_filter");
+      if (savedExamFilter) setExamInitialFilter(JSON.parse(savedExamFilter));
+
+      const savedTheme = localStorage.getItem("passsapa_theme") as "dark" | "light" | null;
+      if (savedTheme) setTheme(savedTheme);
+    } catch (err) {
+      console.error("Failed to load session memory:", err);
     }
   }, []);
 
+  // 💾 Persist View & Session to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("passsapa_current_view", currentView);
+      localStorage.setItem("passsapa_is_logged_in", String(isLoggedIn));
+      localStorage.setItem("passsapa_user_name", userName);
+      localStorage.setItem("passsapa_user_plan", userPlan);
+      if (examInitialFilter) {
+        localStorage.setItem("passsapa_exam_initial_filter", JSON.stringify(examInitialFilter));
+      }
+    } catch (err) {
+      console.error("Failed to save session memory:", err);
+    }
+  }, [currentView, isLoggedIn, userName, userPlan, examInitialFilter]);
+
+  // 🌙 Theme Memory Sync
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("passsapa_theme", theme);
@@ -62,6 +95,7 @@ export default function Home() {
   const handleNavigate = (view: string, extraState?: any) => {
     if (view === "exam" && extraState) {
       setExamInitialFilter(extraState);
+      localStorage.setItem("passsapa_exam_initial_filter", JSON.stringify(extraState));
     }
     setCurrentView(view);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -89,6 +123,8 @@ export default function Home() {
     setIsLoggedIn(false);
     setProfileModalOpen(false);
     setUserPlan("Guest");
+    localStorage.removeItem("passsapa_current_view");
+    localStorage.removeItem("passsapa_exam_initial_filter");
     showToast("🚪 ออกจากระบบสำเร็จ", "คุณหมอได้ออกจากระบบเรียบร้อยแล้ว", "👋");
     setCurrentView("landing");
   };

@@ -1,18 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
-import { SAMPLE_QUESTIONS, SAMPLE_NEWS, SAMPLE_PACKAGES, SAMPLE_KNOWLEDGE_ARTICLES } from "../../lib/constants";
+import React, { useState, useEffect } from "react";
+import { SAMPLE_QUESTIONS, SAMPLE_NEWS, SAMPLE_PACKAGES, SAMPLE_KNOWLEDGE_ARTICLES, SAMPLE_SUBJECTS } from "../../lib/constants";
 
 interface LandingPageProps {
-  onNavigate: (view: string) => void;
+  onNavigate: (view: string, extraState?: any) => void;
   onOpenPayment: (packageName: string, price: number) => void;
+  initialDemoSubject?: string;
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPayment }) => {
-  // Demo Quiz State
-  const demoQ = SAMPLE_QUESTIONS[0];
+export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPayment, initialDemoSubject }) => {
+  const [selectedDemoSubject, setSelectedDemoSubject] = useState<string>(initialDemoSubject || "เวชกรรมไทย");
   const [selectedDemoOption, setSelectedDemoOption] = useState<string | null>(null);
   const [showDemoExplanation, setShowDemoExplanation] = useState(false);
+
+  // Sync demo subject when initialDemoSubject changes
+  useEffect(() => {
+    if (initialDemoSubject) {
+      setSelectedDemoSubject(initialDemoSubject);
+      setSelectedDemoOption(null);
+      setShowDemoExplanation(false);
+    }
+  }, [initialDemoSubject]);
+
+  // Find demo question matching selected subject
+  const currentDemoQ = SAMPLE_QUESTIONS.find(q => q.category === selectedDemoSubject) || SAMPLE_QUESTIONS[0];
 
   const handleDemoSelect = (optId: string) => {
     setSelectedDemoOption(optId);
@@ -107,7 +119,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {SAMPLE_KNOWLEDGE_ARTICLES.map(art => (
+          {SAMPLE_KNOWLEDGE_ARTICLES.slice(0, 3).map(art => (
             <div
               key={art.id}
               onClick={() => onNavigate("knowledge")}
@@ -175,54 +187,85 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenPaym
         </div>
       </section>
 
-      {/* SECTION 4: ตัวอย่างแนวข้อสอบ (DEMO QUIZ - ตามผัง T1) */}
+      {/* SECTION 4: ตัวอย่างแนวข้อสอบ (DEMO QUIZ - รองรับ 5 วิชา) */}
       <section id="demo-quiz-section" className="glass-panel-emerald p-6 space-y-4 rounded-3xl">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-heading bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold">
-            🧪 ตัวอย่างแนวข้อสอบจริง (Interactive Demo)
-          </span>
-          <span className="text-xs text-amber-800 dark:text-amber-400 font-heading font-semibold">
-            {demoQ.category} • {demoQ.scriptureRef}
-          </span>
-        </div>
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <span className="text-xs font-heading bg-emerald-800/15 text-emerald-900 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold">
+              🧪 ตัวอย่างแนวข้อสอบจริง (Interactive Demo)
+            </span>
+            <h2 className="text-lg font-bold font-heading text-slate-950 dark:text-white mt-1 m-0">
+              ทดลองทำข้อสอบจริง: {selectedDemoSubject}
+            </h2>
+          </div>
 
-        <p className="text-base font-semibold leading-relaxed m-0 text-slate-950 dark:text-white">
-          {demoQ.questionText}
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          {demoQ.options?.map(opt => {
-            const isSelected = selectedDemoOption === opt.id;
-            const isCorrect = opt.id === demoQ.correctOptionId;
-
-            let btnStyle = "bg-slate-100 dark:bg-white/5 hover:bg-emerald-800/10 text-slate-900 dark:text-gray-200 border border-slate-200 dark:border-white/10 rounded-2xl";
-            if (isSelected) {
-              btnStyle = isCorrect
-                ? "bg-emerald-800/15 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-800/40 rounded-2xl"
-                : "bg-red-500/20 text-red-900 dark:text-red-300 border border-red-500/40 rounded-2xl";
-            }
-
-            return (
+          {/* 5 Subject Switcher Tabs inside Demo Section */}
+          <div className="flex flex-wrap gap-1 text-xs font-heading bg-black/20 p-1 rounded-full border border-emerald-500/20">
+            {SAMPLE_SUBJECTS.map(subj => (
               <button
-                key={opt.id}
-                onClick={() => handleDemoSelect(opt.id)}
-                className={`p-3.5 rounded-2xl text-left flex items-center gap-3 transition-all ${btnStyle}`}
+                key={subj.id}
+                onClick={() => {
+                  setSelectedDemoSubject(subj.name);
+                  setSelectedDemoOption(null);
+                  setShowDemoExplanation(false);
+                }}
+                className={`px-3 py-1 rounded-full transition-all ${
+                  selectedDemoSubject === subj.name
+                    ? "bg-emerald-500 text-black font-bold shadow-sm"
+                    : "text-gray-300 hover:text-white"
+                }`}
               >
-                <span className="w-7 h-7 rounded-full bg-emerald-900/10 dark:bg-white/10 flex items-center justify-center font-bold font-heading text-xs text-slate-900 dark:text-white">
-                  {opt.id.toUpperCase()}
-                </span>
-                <span className="font-medium">{opt.text}</span>
+                {subj.icon} {subj.name}
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
+
+        <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+          <div className="text-xs text-amber-800 dark:text-amber-300 font-heading font-bold">
+            📖 คัมภีร์อ้างอิง: {currentDemoQ.scriptureRef}
+          </div>
+          <p className="text-base font-semibold leading-relaxed m-0 text-slate-950 dark:text-white">
+            {currentDemoQ.questionText}
+          </p>
+        </div>
+
+        {/* MCQ 5 Options or Standard Options */}
+        {currentDemoQ.options && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+            {currentDemoQ.options.map(opt => {
+              const isSelected = selectedDemoOption === opt.id;
+              const isCorrect = opt.id === currentDemoQ.correctOptionId;
+
+              let btnStyle = "bg-slate-100 dark:bg-white/5 hover:bg-emerald-800/10 text-slate-900 dark:text-gray-200 border border-slate-200 dark:border-white/10 rounded-2xl";
+              if (isSelected) {
+                btnStyle = isCorrect
+                  ? "bg-emerald-800/15 text-emerald-950 dark:text-emerald-300 font-bold border border-emerald-800/40 rounded-2xl"
+                  : "bg-red-500/20 text-red-900 dark:text-red-300 border border-red-500/40 rounded-2xl";
+              }
+
+              return (
+                <button
+                  key={opt.id}
+                  onClick={() => handleDemoSelect(opt.id)}
+                  className={`p-3.5 rounded-2xl text-left flex items-center gap-3 transition-all ${btnStyle}`}
+                >
+                  <span className="w-7 h-7 rounded-full bg-emerald-900/10 dark:bg-white/10 flex items-center justify-center font-bold font-heading text-xs text-slate-900 dark:text-white">
+                    {opt.id.toUpperCase()}
+                  </span>
+                  <span className="font-medium">{opt.text}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {showDemoExplanation && (
-          <div className="p-4 rounded-2xl bg-amber-700/10 text-amber-950 dark:text-amber-100 text-sm space-y-2 border border-amber-700/20">
+          <div className="p-4 rounded-2xl bg-amber-700/10 text-amber-950 dark:text-amber-100 text-sm space-y-2 border border-amber-700/20 animate-fadeIn">
             <div className="font-heading font-bold text-amber-900 dark:text-amber-300">
               💡 เฉลยรายละเอียดอ้างอิงตำราสภาการแพทย์แผนไทย:
             </div>
-            <p className="text-xs leading-relaxed m-0 font-medium">{demoQ.explanation}</p>
+            <p className="text-xs leading-relaxed m-0 font-medium">{currentDemoQ.explanation}</p>
           </div>
         )}
       </section>

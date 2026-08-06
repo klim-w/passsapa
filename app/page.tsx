@@ -19,6 +19,7 @@ import { Footer } from "../src/components/Footer";
 export default function Home() {
   const [currentView, setCurrentView] = useState<string>("landing");
   const [examInitialFilter, setExamInitialFilter] = useState<any>(null);
+  const [landingDemoSubject, setLandingDemoSubject] = useState<string>("เวชกรรมไทย");
 
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -97,6 +98,9 @@ export default function Home() {
       setExamInitialFilter(extraState);
       localStorage.setItem("passsapa_exam_initial_filter", JSON.stringify(extraState));
     }
+    if (view === "landing" && extraState?.demoSubject) {
+      setLandingDemoSubject(extraState.demoSubject);
+    }
     setCurrentView(view);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -169,6 +173,7 @@ export default function Home() {
           <LandingPage
             onNavigate={handleNavigate}
             onOpenPayment={handleOpenPayment}
+            initialDemoSubject={landingDemoSubject}
           />
         )}
 
@@ -196,6 +201,7 @@ export default function Home() {
           <LandingPage
             onNavigate={handleNavigate}
             onOpenPayment={handleOpenPayment}
+            initialDemoSubject={landingDemoSubject}
           />
         )}
 

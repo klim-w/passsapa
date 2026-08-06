@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { SAMPLE_SUBJECTS } from "../lib/constants";
 
 interface NavbarProps {
   currentView: string;
@@ -25,6 +26,20 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuth,
   onOpenProfile,
 }) => {
+  const [isDemoDropdownOpen, setIsDemoDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDemoDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleScrollToSection = (sectionId: string) => {
     if (currentView !== "landing") {
       onNavigate("landing");
@@ -35,6 +50,21 @@ export const Navbar: React.FC<NavbarProps> = ({
     } else {
       const el = document.getElementById(sectionId);
       if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleSelectDemoSubject = (subjectName: string) => {
+    setIsDemoDropdownOpen(false);
+    if (isLoggedIn) {
+      // For Logged-in Members: Warp directly to Exam Engine for that subject
+      onNavigate("exam", { category: subjectName });
+    } else {
+      // For Guest Visitors: Scroll to Demo Quiz section & switch demo question to that subject
+      onNavigate("landing", { demoSubject: subjectName });
+      setTimeout(() => {
+        const el = document.getElementById("demo-quiz-section");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     }
   };
 
@@ -70,7 +100,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Dynamic Navigation Lineup (ตามสเปกผัง T2 - เฉพาะเมนูของผู้ใช้งาน) */}
+        {/* Dynamic Navigation Lineup (ตามสเปกผัง T2) */}
         <div className="hidden lg:flex items-center gap-1 text-xs font-heading">
           <button
             onClick={() => {
@@ -108,14 +138,54 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               🌿 ระบบเลือกสาขา
             </button>
-          ) : (
+          ) : null}
+
+          {/* 🧪 ตัวอย่างข้อสอบ (Interactive 5-Subject Dropdown Menu) */}
+          <div className="relative" ref={dropdownRef}>
             <button
-              onClick={() => handleScrollToSection("demo-quiz-section")}
-              className="px-3 py-1.5 rounded-full text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium transition-all"
+              onClick={() => setIsDemoDropdownOpen(prev => !prev)}
+              onMouseEnter={() => setIsDemoDropdownOpen(true)}
+              className={`px-3 py-1.5 rounded-full transition-all flex items-center gap-1 font-medium ${
+                isDemoDropdownOpen
+                  ? "bg-emerald-800/20 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 font-bold"
+                  : "text-slate-800 dark:text-gray-400 hover:text-emerald-800 dark:hover:text-emerald-300"
+              }`}
             >
-              🧪 ตัวอย่างข้อสอบ
+              <span>🧪 ตัวอย่างข้อสอบ</span>
+              <span className="text-[10px] opacity-70">▾</span>
             </button>
-          )}
+
+            {/* Glassmorphic Dropdown Panel */}
+            {isDemoDropdownOpen && (
+              <div 
+                className="absolute left-0 mt-1 w-64 glass-panel-emerald rounded-2xl p-2 space-y-1 shadow-2xl border border-emerald-500/30 z-50 animate-fadeIn"
+                onMouseLeave={() => setIsDemoDropdownOpen(false)}
+              >
+                <div className="px-3 py-1 text-[10px] font-heading font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider border-b border-emerald-500/20 pb-1 mb-1">
+                  เลือกสาขาวิชาทดลองทำข้อสอบ (5 วิชา)
+                </div>
+                {SAMPLE_SUBJECTS.map(subj => (
+                  <button
+                    key={subj.id}
+                    onClick={() => handleSelectDemoSubject(subj.name)}
+                    className="w-full text-left p-2 rounded-xl flex items-center gap-2.5 hover:bg-emerald-800/15 dark:hover:bg-white/10 transition-all group"
+                  >
+                    <span className="text-sm p-1 rounded-lg bg-emerald-900/10 dark:bg-white/5 group-hover:scale-110 transition-transform">
+                      {subj.icon}
+                    </span>
+                    <div>
+                      <div className="font-heading font-bold text-xs text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-300">
+                        {subj.name}
+                      </div>
+                      <div className="text-[10px] text-slate-600 dark:text-gray-400 font-medium truncate max-w-[170px]">
+                        ข้อสอบตัวอย่าง {subj.weakTopics.join(", ")}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <button
             onClick={() => handleScrollToSection("pricing-section")}
